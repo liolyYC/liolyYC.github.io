@@ -57,8 +57,12 @@
 <!--             }-->
         }
 
-
-        var gyr;
+        var gyr= new Gyroscope({frequency: 560});
+        var gyr1 = new Gyroscope({frequency: 1});
+        var gyr5 = new Gyroscope({frequency: 5});
+        var gyr10 = new Gyroscope({frequency: 10});
+        var gyr100 = new Gyroscope({frequency: 100});
+        var gyr300= new Gyroscope({frequency: 300});
         function w3caccfreq1() {
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 console.log(`[NEUJS] Permissions: ${result.state}`);
@@ -67,15 +71,15 @@
                     return;
                 }
 
-                gyr = new Gyroscope({frequency: 1});
+                gyr1 = new Gyroscope({frequency: 1});
                 let max_magnitude = 0;
-                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-                gyr.addEventListener('reading', () => {
-                    console.log('88888888888:'+gyr.timestamp)
-                    log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                gyr1.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr1.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr1.addEventListener('reading', () => {
+                    console.log('88888888888:'+gyr1.timestamp)
+                    log(gyr1.timestamp, gyr1.x, gyr1.y, gyr1.z);
                 });
-                gyr.start();
+                gyr1.start();
             });
         }
 
@@ -86,14 +90,14 @@
                     return;
                 }
 
-                gyr = new Gyroscope({frequency: 5});
+                gyr5 = new Gyroscope({frequency: 5});
                 let max_magnitude = 0;
-                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-                gyr.addEventListener('reading', () => {
-                    log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                gyr5.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr5.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr5.addEventListener('reading', () => {
+                    log(gyr5.timestamp, gyr5.x, gyr5.y, gyr5.z);
                 });
-                gyr.start();
+                gyr5.start();
             });
         }
 
@@ -104,14 +108,14 @@
                     return;
                 }
 
-                gyr = new Gyroscope({frequency: 10});
+                gyr10 = new Gyroscope({frequency: 10});
                 let max_magnitude = 0;
-                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-                gyr.addEventListener('reading', () => {
-                    log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                gyr10.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr10.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr10.addEventListener('reading', () => {
+                    log(gyr10.timestamp, gyr10.x, gyr10.y, gyr10.z);
                 });
-                gyr.start();
+                gyr10.start();
             });
         }
 
@@ -122,14 +126,14 @@
                     return;
                 }
 
-                gyr = new Gyroscope({frequency: 100});
+                gyr100 = new Gyroscope({frequency: 100});
                 let max_magnitude = 0;
-                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-                gyr.addEventListener('reading', () => {
-                    log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                gyr100.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr100.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr100.addEventListener('reading', () => {
+                    log(gyr100.timestamp, gyr100.x, gyr100.y, gyr100.z);
                 });
-                gyr.start();
+                gyr100.start();
             });
         }
 
@@ -140,17 +144,17 @@
                     return;
                 }
 
-                gyr = new Gyroscope({frequency: 300});
+                gyr300 = new Gyroscope({frequency: 300});
                 let max_magnitude = 0;
-                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-                gyr.addEventListener('reading', () => {
-                    let magnitude = Math.hypot(gyr.x, gyr.y, gyr.z);
-                    console.log(`[NEUJS] UpdatePlatformSensorReading Start x,y,z: ${gyr.x}, ${gyr.y}, ${gyr.z} magnitude: ${magnitude} m/s2`);
-                    console.log(`[NEUJS] Timestamp: ${gyr.timestamp}`);
-                    log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                gyr300.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr300.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr300.addEventListener('reading', () => {
+                    let magnitude = Math.hypot(gyr300.x, gyr300.y, gyr300.z);
+                    console.log(`[NEUJS] UpdatePlatformSensorReading Start x,y,z: ${gyr300.x}, ${gyr300.y}, ${gyr300.z} magnitude: ${magnitude} m/s2`);
+                    console.log(`[NEUJS] Timestamp: ${gyr300.timestamp}`);
+                    log(gyr300.timestamp, gyr300.x, gyr300.y, gyr300.z);
                 });
-                gyr.start();
+                gyr300.start();
             });
         }
 
@@ -160,9 +164,37 @@
                     console.log('[NEU]Permission to use gyroscope sensor is denied.');
                     return;
                 }
-
-                gyr.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                gyr.stop();
+                if(!!gyr){
+                  gyr.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr.stop();
+                } else if(!!gyr1){
+                  gyr1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr1.stop();
+                } else if(!!gyr5){
+                  gyr5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr5.stop();
+                } else if(!!gyr10){
+                  gyr10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr10.stop();
+                } else if(!!gyr100){
+                  gyr100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr100.stop();
+                } else if(!!gyr300){
+                  gyr300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                  gyr300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                  gyr300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                  gyr300.stop();
+                }
             });
         }
 
