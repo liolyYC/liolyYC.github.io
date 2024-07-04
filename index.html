@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="misapplication-tap-highlight" content="no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <title>加速度传感器</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .log-entry {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .log-entry-header {
+            font-weight: bold;
+            color: #333;
+        }
+        .log-entry-details {
+            color: #555;
+        }
+    </style>
+    <script type="text/javascript">
+        var timestampArray = [];
+        var msgArray = [];
+        function log(timestamp, x, y, z) {
+             document.getElementById('x').textContent = x;
+             document.getElementById('y').textContent = y;
+             document.getElementById('z').textContent = z;
+             timestampArray.push(timestamp);
+             console.log(`${timestampArray.length}`);
+             if ((timestampArray.length - 60) === 0) {
+                var sum = 0;
+                for (var i = 0; i < timestampArray.length - 1; i++) {
+                    sum = sum + timestampArray[i + 1] - timestampArray[i];
+                }
+                var avg = sum / 59;
+                var feq = 1000 / avg;
+                document.getElementById('freq').textContent = feq.toFixed(2) + " HZ";
+                timestampArray = []
+             }
+
+<!--             var msg = timestamp + ": " + x + ", " + y + ", "  + z;-->
+<!--             msgArray.push(msg);-->
+<!--             if (msgArray.length === 5) {-->
+<!--                 document.getElementById('msg1').textContent = msgArray[0];-->
+<!--                 document.getElementById('msg2').textContent = msgArray[1];-->
+<!--                 document.getElementById('msg3').textContent = msgArray[2];-->
+<!--                 document.getElementById('msg4').textContent = msgArray[3];-->
+<!--                 document.getElementById('msg5').textContent = msgArray[4];-->
+<!--                 msgArray = [];-->
+<!--             }-->
+        }
+
+        var acl;
+        function w3caccfreq1() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                console.log(`[NEUJS] Permissions: ${result.state}`);
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl = new Accelerometer({frequency: 1});
+                let max_magnitude = 0;
+                acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                acl.addEventListener('reading', () => {
+                    log(acl.timestamp, acl.x, acl.y, acl.z);
+                });
+                acl.start();
+            });
+        }
+
+        function w3caccfreq5() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl = new Accelerometer({frequency: 5});
+                let max_magnitude = 0;
+                acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                acl.addEventListener('reading', () => {
+                    log(acl.timestamp, acl.x, acl.y, acl.z);
+                });
+                acl.start();
+            });
+        }
+
+        function w3caccfreq10() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl = new Accelerometer({frequency: 10});
+                let max_magnitude = 0;
+                acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                acl.addEventListener('reading', () => {
+                    log(acl.timestamp, acl.x, acl.y, acl.z);
+                });
+                acl.start();
+            });
+        }
+
+        function w3caccfreq100() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl = new Accelerometer({frequency: 100});
+                let max_magnitude = 0;
+                acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                acl.addEventListener('reading', () => {
+                    log(acl.timestamp, acl.x, acl.y, acl.z);
+                });
+                acl.start();
+            });
+        }
+
+        function w3caccfreq300() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl = new Accelerometer({frequency: 300});
+                let max_magnitude = 0;
+                acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                acl.addEventListener('reading', () => {
+                    let magnitude = Math.hypot(acl.x, acl.y, acl.z);
+                    console.log(`[NEUJS] UpdatePlatformSensorReading Start x,y,z: ${acl.x}, ${acl.y}, ${acl.z} magnitude: ${magnitude} m/s2`);
+                    console.log(`[NEUJS] Timestamp: ${acl.timestamp}`);
+                    log(acl.timestamp, acl.x, acl.y, acl.z);
+                });
+                acl.start();
+            });
+        }
+
+        function delw3cacc() {
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+
+                acl.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                acl.stop();
+            });
+        }
+
+        function checkSensorsPermission() {
+            document.getElementById('log').textContent = '检查权限';
+            Promise.all([
+                navigator.permissions.query({ name: 'accelerometer' }),
+                navigator.permissions.query({ name: 'gyroscope' })
+                ]).then(results => {
+                    const accelerometerPermission = results[0];
+                    const gyroscopePermission = results[1];
+                    document.getElementById('log').textContent = '检查权限成功';
+                    console.log(`[NEU]加速度计权限: ${accelerometerPermission.state}`);
+                    console.log(`[NEU]陀螺仪权限: ${gyroscopePermission.state}`);
+            }).catch(error => {
+                console.error('[NEU]权限查询失败:', error);
+                document.getElementById('log').textContent = '检查权限失败' + error;
+            });
+        }
+
+        // ***************************Android***************************
+        function getAcc() {
+            if ('DeviceMotionEvent' in window) {
+                document.getElementById('log').textContent = '此浏览器支持DeviceMotionEvent';
+                window.addEventListener('devicemotion', handleMotionEvent, false);
+            } else {
+              document.getElementById('log').textContent = '此浏览器不支持DeviceMotionEvent';
+            }
+        }
+        function delAcc() {
+            if ('DeviceMotionEvent' in window) {
+              window.removeEventListener('devicemotion', handleMotionEvent, false);
+            } else {
+              console.log('此浏览器不支持DeviceMotionEvent');
+            }
+        }
+
+        // ***************************IOS***************************
+        function requestSensorPermission() {
+            document.getElementById('log').textContent = '检查权限IOS';
+            if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
+                DeviceMotionEvent.requestPermission().then(response => {
+                    document.getElementById('log').textContent = '检查权限IOS res: ' + response;
+                }).catch(error => {
+                    document.getElementById('log').textContent = '检查权限IOS err: ' + error;
+                });
+            } else {
+                document.getElementById('log').textContent = '检查权限IOS DeviceMotionEvent undefined';
+            }
+        };
+
+        function handleMotionEvent(event) {
+            let acceleration = event.acceleration;
+            if (acceleration) {
+              let { x, y, z } = acceleration;
+              log(event.timeStamp, x, y, z);
+            }
+        }
+
+        function requestSensorPermissionAndData() {
+           document.getElementById('log').textContent = '检查权限IOS';
+           if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
+               DeviceMotionEvent.requestPermission().then(response => {
+                   if (response == 'granted') {
+                       window.addEventListener('devicemotion', handleMotionEvent, false);
+                   } else {
+                       document.getElementById('log').textContent = '检查权限IOS res: ' + response;
+                   }
+               }).catch(error => {
+                   document.getElementById('log').textContent = '检查权限IOS err: ' + error;
+                 });
+           } else {
+                document.getElementById('log').textContent = '检查权限IOS DeviceMotionEvent undefined';
+           }
+        };
+
+        function removeListenData() {
+           document.getElementById('log').textContent = '取消监听数据';
+           if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
+               DeviceMotionEvent.requestPermission().then(response => {
+                   if (response == 'granted') {
+                       window.removeEventListener('devicemotion', handleMotionEvent, false);
+                   } else {
+                       document.getElementById('log').textContent = '检查权限IOS res: ' + response;
+                   }
+               }).catch(error => {
+                   document.getElementById('log').textContent = '检查权限IOS err: ' + error;
+                 });
+           } else {
+                document.getElementById('log').textContent = '检查权限IOS DeviceMotionEvent undefined';
+           }
+        };
+
+        function TestfrequencyIsCappedToAllowedMaximum() {
+            acl = new Accelerometer({frequency: 560});
+            acl.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+            acl.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+            acl.addEventListener('reading', () => {
+                log(acl.timestamp, acl.x, acl.y, acl.z);
+            });
+            acl.start();
+            var freq = acl.getSamplingFrequency();
+            acl.stop();
+        }
+    </script>
+</head>
+<body>
+<div id="dcontent" class="dcontent">
+    <h4>w3c</h4>
+    <ul class="dlist">
+        <button type="button" onclick="w3caccfreq1()">w3c-freq1</button>
+        <button type="button" onclick="w3caccfreq5()">w3c-freq5</button>
+        <button type="button" onclick="w3caccfreq10()">w3c-freq10</button>
+        <button type="button" onclick="w3caccfreq100()">w3c-freq100</button>
+        <button type="button" onclick="w3caccfreq300()">w3c-freq300</button>
+        <button type="button" onclick="delw3cacc()">w3cstop</button>
+        <button type="button" onclick="checkSensorsPermission()">检查传感器权限w3c</button>
+        <button type="button" onclick="TestfrequencyIsCappedToAllowedMaximum()">测试频率上限</button>
+    </ul>
+    <h4>Android</h4>
+    <ul class="dlist">
+        <button type="button" onclick="getAcc()">获取设备当前加速度</button>
+        <button type="button" onclick="delAcc()">取消监听加速度</button>
+    </ul>
+    <h4>iOS</h4>
+    <ul class="dlist">
+        <button type="button" onclick="requestSensorPermission()">检查传感器权限</button>
+        <button type="button" onclick="requestSensorPermissionAndData()">传感器数据</button>
+        <button type="button" onclick="removeListenData()">取消监听传感器数据</button>
+    </ul>
+</div>
+<div id="output">
+    <h1>加速度数据</h1>
+    <h2 id = "log"></h2>
+    <p>x: <span id="x">0</span></p>
+    <p>y: <span id="y">0</span></p>
+    <p>z: <span id="z">0</span></p>
+
+    <h1 id = "freq"></h1>
+
+    <div class="log-entry">
+        <div class="log-entry-details" id = "msg1"></div>
+    </div>
+    <div class="log-entry">
+        <div class="log-entry-details" id = "msg2"></div>
+    </div>
+    <div class="log-entry">
+        <div class="log-entry-details" id = "msg3"></div>
+    </div>
+    <div class="log-entry">
+        <div class="log-entry-details" id = "msg4"></div>
+    </div>
+    <div class="log-entry">
+        <div class="log-entry-details" id = "msg5"></div>
+    </div>
+</div>
+</body>
+
+</html>
