@@ -209,7 +209,51 @@
                     console.log('[NEU]Permission to use RelativeOrientationSensor sensor is denied.');
                     return;
                 }
-                stopAllAcl();
+                if(!!Ori1){
+                    Ori1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    Ori1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    Ori1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    Ori1.stop();
+                    Ori1 = null;
+                }
+                if(!!Ori5){
+                    Ori5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    Ori5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    Ori5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    Ori5.stop();
+                    Ori5 = null;
+                }
+                if(!!Ori10){
+                    Ori10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    Ori10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    Ori10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    Ori10.stop();
+                    Ori10 = null;
+                }
+                if(!!Ori100){
+                    Ori100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    Ori100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    Ori100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    Ori100.stop();
+                    Ori100 = null;
+                }
+                if(!!Ori300){
+                    Ori300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    Ori300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    Ori300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    Ori300.stop();
+                    Ori300 = null;
+                }
+                if(!!OriMax){
+                    OriMax.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    OriMax.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    OriMax.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    OriMax.stop();
+                    OriMax = null;
+                }
+                timestampArray = [];
+                timestampArray2 = [];
+                timestampArray3 = [];
             });
         }
 
@@ -225,54 +269,6 @@
                 console.error('[NEU]权限查询失败:', error);
                 document.getElementById('log3').textContent = '检查权限失败' + error;
             });
-        }
-
-        function stopAllAcl(){
-            if(!!Ori1){
-                Ori1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                Ori1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                Ori1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                Ori1.stop();
-                Ori1 = null;
-            }
-            if(!!Ori5){
-                Ori5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                Ori5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                Ori5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                Ori5.stop();
-                Ori5 = null;
-            }
-            if(!!Ori10){
-                Ori10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                Ori10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                Ori10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                Ori10.stop();
-                Ori10 = null;
-            }
-            if(!!Ori100){
-                Ori100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                Ori100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                Ori100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                Ori100.stop();
-                Ori100 = null;
-            }
-            if(!!Ori300){
-                Ori300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                Ori300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                Ori300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                Ori300.stop();
-                Ori300 = null;
-            }
-            if(!!OriMax){
-                OriMax.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                OriMax.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                OriMax.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                OriMax.stop();
-                OriMax = null;
-            }
-            timestampArray = [];
-            timestampArray2 = [];
-            timestampArray3 = [];
         }
 
         function getOri() {

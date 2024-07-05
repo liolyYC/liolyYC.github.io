@@ -225,6 +225,7 @@
                   gry300 = null;
                 }
                 timestampArray = [];
+                timestampArray2 = [];
             });
         }
 
@@ -244,7 +245,6 @@
 
         // ***************************Android***************************
         function getGyr() {
-            delw3cacc();
             if ('DeviceMotionEvent' in window) {
                 document.getElementById('log').textContent = '此浏览器支持DeviceMotionEvent';
                 window.addEventListener('devicemotion', handleMotionEvent, false);

@@ -180,7 +180,50 @@
                     console.log('[NEU]Permission to use accelerometer sensor is denied.');
                     return;
                 }
-                stopAllAcl();
+                if(!!acl1){
+                    acl1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    acl1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    acl1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    acl1.stop();
+                    acl1 = null;
+                }
+                if(!!acl5){
+                    acl5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    acl5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    acl5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    acl5.stop();
+                    acl5 = null;
+                }
+                if(!!acl10){
+                    acl10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    acl10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    acl10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    acl10.stop();
+                    acl10 = null;
+                }
+                if(!!acl100){
+                    acl100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    acl100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    acl100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    acl100.stop();
+                    acl100 = null;
+                }
+                if(!!acl300){
+                    acl300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    acl300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    acl300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    acl300.stop();
+                    acl300 = null;
+                }
+                if(!!aclMax){
+                    aclMax.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
+                    aclMax.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
+                    aclMax.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
+                    aclMax.stop();
+                    aclMax = null;
+                }
+                timestampArray = [];
+                timestampArray2 = [];
             });
         }
 
@@ -201,56 +244,8 @@
             });
         }
 
-        function stopAllAcl(){
-            if(!!acl1){
-                acl1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                acl1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                acl1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                acl1.stop();
-                acl1 = null;
-            }
-            if(!!acl5){
-                acl5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                acl5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                acl5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                acl5.stop();
-                acl5 = null;
-            }
-            if(!!acl10){
-                acl10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                acl10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                acl10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                acl10.stop();
-                acl10 = null;
-            }
-            if(!!acl100){
-                acl100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                acl100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                acl100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                acl100.stop();
-                acl100 = null;
-            }
-            if(!!acl300){
-                acl300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                acl300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                acl300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                acl300.stop();
-                acl300 = null;
-            }
-            if(!!aclMax){
-                aclMax.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
-                aclMax.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
-                aclMax.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
-                aclMax.stop();
-                aclMax = null;
-            }
-            timestampArray = [];
-            timestampArray2 = [];
-        }
-
         // ***************************Android***************************
         function getAcc() {
-            stopAllAcl();
             if ('DeviceMotionEvent' in window) {
                 document.getElementById('log').textContent = '此浏览器支持DeviceMotionEvent';
                 window.addEventListener('devicemotion', handleMotionEvent, false);
