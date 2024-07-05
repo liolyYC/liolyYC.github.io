@@ -34,10 +34,10 @@
              document.getElementById('gamma').textContent = gamma;
              setTimestamp(timestamp, 'freq');
         }
-        function log2(timestamp, alpha, beta, gamma) {
-             document.getElementById('alpha2').textContent = alpha;
-             document.getElementById('beta2').textContent = beta;
-             document.getElementById('gamma2').textContent = gamma;
+        function log2(timestamp, x, y, z) {
+             document.getElementById('x').textContent = x;
+             document.getElementById('y').textContent = y;
+             document.getElementById('z').textContent = z;
              setTimestamp2(timestamp, 'freq2');
         }
 
@@ -91,7 +91,7 @@
                 gyr1.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr1.addEventListener('reading', () => {
                     console.log('88888888888:'+gyr1.timestamp)
-                    log2(gyr1.timestamp, gyr1.z, gyr1.x, gyr1.y);
+                    log2(gyr1.timestamp, gyr1.x, gyr1.y, gyr1.z);
                 });
                 gyr1.start();
             });
@@ -110,7 +110,7 @@
                 gyr5.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr5.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr5.addEventListener('reading', () => {
-                    log2(gyr5.timestamp, gyr5.z, gyr5.x, gyr5.y);
+                    log2(gyr5.timestamp, gyr5.x, gyr5.y, gyr5.z);
                 });
                 gyr5.start();
             });
@@ -129,7 +129,7 @@
                 gyr10.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr10.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr10.addEventListener('reading', () => {
-                    log2(gyr10.timestamp, gyr10.z, gyr10.x, gyr10.y);
+                    log2(gyr10.timestamp, gyr10.x, gyr10.y, gyr10.z);
                 });
                 gyr10.start();
             });
@@ -148,7 +148,7 @@
                 gyr100.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr100.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr100.addEventListener('reading', () => {
-                    log2(gyr100.timestamp, gyr100.z, gyr100.x, gyr100.y);
+                    log2(gyr100.timestamp, gyr100.x, gyr100.y, gyr100.z);
                 });
                 gyr100.start();
             });
@@ -170,7 +170,7 @@
                     let magnitude = Math.hypot(gyr300.z, gyr300.x, gyr300.y);
                     console.log(`[NEUJS] UpdatePlatformSensorReading Start x,y,z: ${gyr300.x}, ${gyr300.y}, ${gyr300.z} magnitude: ${magnitude} m/s2`);
                     console.log(`[NEUJS] Timestamp: ${gyr300.timestamp}`);
-                    log2(gyr300.timestamp, gyr300.z, gyr300.x, gyr300.y);
+                    log2(gyr300.timestamp, gyr300.x, gyr300.y, gyr300.z);
                 });
                 gyr300.start();
             });
@@ -280,7 +280,7 @@
                 gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr.addEventListener('reading', () => {
-                    log2(gyr.timestamp, gyr.z, gyr.x, gyr.y);
+                    log2(gyr.timestamp, gyr.x, gyr.y, gyr.z);
                     // var freq = OriMax.getSamplingFrequency();
                     // document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
                 });
@@ -317,9 +317,9 @@
     <h2 style="color:red;">输出OUT：</h2>
     <h3>w3c</h3>
     <h2 id="log2"></h2>
-    <p>alpha: <span id="alpha2">0</span></p>
-    <p>beta: <span id="beta2">0</span></p>
-    <p>gamma: <span id="gamma2">0</span></p>
+    <p>x: <span id="x">0</span></p>
+    <p>y: <span id="y">0</span></p>
+    <p>z: <span id="z">0</span></p>
     <h1 id = "freq2">0Hz</h1>
 <!--    <h1 id="maxfreq">频率上限:0Hz</h1>-->
 
