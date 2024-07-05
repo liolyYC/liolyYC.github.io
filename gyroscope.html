@@ -27,43 +27,57 @@
     </style>
     <script type="text/javascript">
         var timestampArray = [];
-        var msgArray = [];
+        var timestampArray2 = [];
         function log(timestamp, alpha, beta, gamma) {
              document.getElementById('alpha').textContent = alpha;
              document.getElementById('beta').textContent = beta;
              document.getElementById('gamma').textContent = gamma;
-             timestampArray.push(timestamp);
-             console.log(`${timestampArray.length}`);
-             if ((timestampArray.length - 60) === 0) {
+             setTimestamp(timestamp, 'freq');
+        }
+        function log2(timestamp, alpha, beta, gamma) {
+             document.getElementById('alpha2').textContent = alpha;
+             document.getElementById('beta2').textContent = beta;
+             document.getElementById('gamma2').textContent = gamma;
+             setTimestamp2(timestamp, 'freq2');
+        }
+
+        function setTimestamp(timestamp, id) {
+            timestampArray.push(timestamp);
+            console.log(`${timestampArray.length}`);
+            if ((timestampArray.length - 60) === 0) {
                 var sum = 0;
                 for (var i = 0; i < timestampArray.length - 1; i++) {
                     sum = sum + timestampArray[i + 1] - timestampArray[i];
                 }
                 var avg = sum / 59;
                 var feq = 1000 / avg;
-                document.getElementById('freq').textContent = feq.toFixed(2) + " HZ";
-                timestampArray = []
-             }
-
-<!--             var msg = timestamp + ": " + x + ", " + y + ", "  + z;-->
-<!--             msgArray.push(msg);-->
-<!--             if (msgArray.length === 5) {-->
-<!--                 document.getElementById('msg1').textContent = msgArray[0];-->
-<!--                 document.getElementById('msg2').textContent = msgArray[1];-->
-<!--                 document.getElementById('msg3').textContent = msgArray[2];-->
-<!--                 document.getElementById('msg4').textContent = msgArray[3];-->
-<!--                 document.getElementById('msg5').textContent = msgArray[4];-->
-<!--                 msgArray = [];-->
-<!--             }-->
+                document.getElementById(id).textContent = feq.toFixed(2) + " HZ";
+                timestampArray = [];
+            }
+        }
+        function setTimestamp2(timestamp, id) {
+            timestampArray2.push(timestamp);
+            console.log(`${timestampArray2.length}`);
+            if ((timestampArray2.length - 60) === 0) {
+                var sum = 0;
+                for (var i = 0; i < timestampArray2.length - 1; i++) {
+                    sum = sum + timestampArray2[i + 1] - timestampArray2[i];
+                }
+                var avg = sum / 59;
+                var feq = 1000 / avg;
+                document.getElementById(id).textContent = feq.toFixed(2) + " HZ";
+                timestampArray2 = [];
+            }
         }
 
-        var gyr= new Gyroscope({frequency: 560});
-        var gyr1 = new Gyroscope({frequency: 1});
-        var gyr5 = new Gyroscope({frequency: 5});
-        var gyr10 = new Gyroscope({frequency: 10});
-        var gyr100 = new Gyroscope({frequency: 100});
-        var gyr300= new Gyroscope({frequency: 300});
+        var gyr;
+        var gyr1;
+        var gyr5;
+        var gyr10;
+        var gyr100;
+        var gyr300;
         function w3caccfreq1() {
+            delw3cacc();
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 console.log(`[NEUJS] Permissions: ${result.state}`);
                 if (result.state === 'denied') {
@@ -77,13 +91,14 @@
                 gyr1.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr1.addEventListener('reading', () => {
                     console.log('88888888888:'+gyr1.timestamp)
-                    log(gyr1.timestamp, gyr1.x, gyr1.y, gyr1.z);
+                    log2(gyr1.timestamp, gyr1.x, gyr1.y, gyr1.z);
                 });
                 gyr1.start();
             });
         }
 
         function w3caccfreq5() {
+            delw3cacc();
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 if (result.state === 'denied') {
                     console.log('[NEU]Permission to use gyroscope sensor is denied.');
@@ -95,13 +110,14 @@
                 gyr5.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr5.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr5.addEventListener('reading', () => {
-                    log(gyr5.timestamp, gyr5.x, gyr5.y, gyr5.z);
+                    log2(gyr5.timestamp, gyr5.x, gyr5.y, gyr5.z);
                 });
                 gyr5.start();
             });
         }
 
         function w3caccfreq10() {
+            delw3cacc();
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 if (result.state === 'denied') {
                     console.log('[NEU]Permission to use gyroscope sensor is denied.');
@@ -113,13 +129,14 @@
                 gyr10.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr10.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr10.addEventListener('reading', () => {
-                    log(gyr10.timestamp, gyr10.x, gyr10.y, gyr10.z);
+                    log2(gyr10.timestamp, gyr10.x, gyr10.y, gyr10.z);
                 });
                 gyr10.start();
             });
         }
 
         function w3caccfreq100() {
+            delw3cacc();
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 if (result.state === 'denied') {
                     console.log('[NEU]Permission to use gyroscope sensor is denied.');
@@ -131,13 +148,14 @@
                 gyr100.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
                 gyr100.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr100.addEventListener('reading', () => {
-                    log(gyr100.timestamp, gyr100.x, gyr100.y, gyr100.z);
+                    log2(gyr100.timestamp, gyr100.x, gyr100.y, gyr100.z);
                 });
                 gyr100.start();
             });
         }
 
         function w3caccfreq300() {
+            delw3cacc();
             navigator.permissions.query({ name: 'gyroscope' }).then(result => {
                 if (result.state === 'denied') {
                     console.log('[NEU]Permission to use gyroscope sensor is denied.');
@@ -152,7 +170,7 @@
                     let magnitude = Math.hypot(gyr300.x, gyr300.y, gyr300.z);
                     console.log(`[NEUJS] UpdatePlatformSensorReading Start x,y,z: ${gyr300.x}, ${gyr300.y}, ${gyr300.z} magnitude: ${magnitude} m/s2`);
                     console.log(`[NEUJS] Timestamp: ${gyr300.timestamp}`);
-                    log(gyr300.timestamp, gyr300.x, gyr300.y, gyr300.z);
+                    log2(gyr300.timestamp, gyr300.x, gyr300.y, gyr300.z);
                 });
                 gyr300.start();
             });
@@ -169,51 +187,64 @@
                   gyr.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr.stop();
-                } else if(!!gyr1){
+                  gry = null;
+                }
+                if(!!gyr1){
                   gyr1.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
                   gyr1.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr1.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr1.stop();
-                } else if(!!gyr5){
+                  gry1 = null;
+                }
+                if(!!gyr5){
                   gyr5.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
                   gyr5.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr5.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr5.stop();
-                } else if(!!gyr10){
+                  gry5 = null;
+                }
+                if(!!gyr10){
                   gyr10.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
                   gyr10.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr10.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr10.stop();
-                } else if(!!gyr100){
+                  gry10 = null;
+                }
+                if(!!gyr100){
                   gyr100.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
                   gyr100.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr100.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr100.stop();
-                } else if(!!gyr300){
+                  gry100 = null;
+                }
+                if(!!gyr300){
                   gyr300.removeEventListener('activate', () => console.log('[NEU]Ready to remove.'));
                   gyr300.removeEventListener('error', () => console.log('[NEU]Ready to remove.'));
                   gyr300.removeEventListener('reading', () => console.log('[NEU]Ready to remove.'));
                   gyr300.stop();
+                  gry300 = null;
                 }
+                timestampArray = [];
             });
         }
 
         function checkSensorsPermission() {
-            document.getElementById('log').textContent = '检查权限';
+            document.getElementById('log2').textContent = '检查权限';
             Promise.all([
                 navigator.permissions.query({ name: 'gyroscope' })
                 ]).then(results => {
                     const gyroscopePermission = results[0];
-                    document.getElementById('log').textContent = '检查权限成功';
+                    document.getElementById('log2').textContent = '检查权限成功';
                     console.log(`[NEU]陀螺仪权限: ${gyroscopePermission.state}`);
             }).catch(error => {
                 console.error('[NEU]权限查询失败:', error);
-                document.getElementById('log').textContent = '检查权限失败' + error;
+                document.getElementById('log2').textContent = '检查权限失败' + error;
             });
         }
 
         // ***************************Android***************************
         function getGyr() {
+            delw3cacc();
             if ('DeviceMotionEvent' in window) {
                 document.getElementById('log').textContent = '此浏览器支持DeviceMotionEvent';
                 window.addEventListener('devicemotion', handleMotionEvent, false);
@@ -239,38 +270,20 @@
             }
         }
 
-
-        function removeListenData() {
-           document.getElementById('log').textContent = '取消监听数据';
-           if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
-               DeviceMotionEvent.requestPermission().then(response => {
-                   if (response == 'granted') {
-                       window.removeEventListener('devicemotion', handleMotionEvent, false);
-                   } else {
-                       document.getElementById('log').textContent = '检查权限IOS res: ' + response;
-                   }
-               }).catch(error => {
-                   document.getElementById('log').textContent = '检查权限IOS err: ' + error;
-                 });
-           } else {
-                document.getElementById('log').textContent = '检查权限IOS DeviceMotionEvent undefined';
-           }
-        };
-
         function TestfrequencyIsCappedToAllowedMaximum() {
+            delw3cacc();
             gyr = new Gyroscope({frequency: 560});
             gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
             gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
             gyr.addEventListener('reading', () => {
-                log(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                log2(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                var freq = OriMax.getSamplingFrequency();
+                document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
             });
             gyr.start();
-            var freq = gyr.getSamplingFrequency();
-            gyr.stop();
+            // var freq = gyr.getSamplingFrequency();
+            // gyr.stop();
         }
-
-
-
 
 
     </script>
@@ -297,6 +310,14 @@
 </div>
 <div id="output">
     <h2 style="color:red;">输出OUT：</h2>
+    <h3>w3c</h3>
+    <h2 id="log2"></h2>
+    <p>alpha: <span id="alpha2">0</span></p>
+    <p>beta: <span id="beta2">0</span></p>
+    <p>gamma: <span id="gamma2">0</span></p>
+    <h1 id = "freq2">0Hz</h1>
+    <h1 id="maxfreq">频率上限:0Hz</h1>
+
     <h3>陀螺仪数据:</h3>
     <h4 id = "log"></h4>
     <p>alpha: <span id="alpha">0</span></p>
@@ -304,22 +325,6 @@
     <p>gamma: <span id="gamma">0</span></p>
     <h2>帧率：</h2>
     <h4 id = "freq">0hz</h4>
-
-<!--    <div class="log-entry">-->
-<!--        <div class="log-entry-details" id = "msg1"></div>-->
-<!--    </div>-->
-<!--    <div class="log-entry">-->
-<!--        <div class="log-entry-details" id = "msg2"></div>-->
-<!--    </div>-->
-<!--    <div class="log-entry">-->
-<!--        <div class="log-entry-details" id = "msg3"></div>-->
-<!--    </div>-->
-<!--    <div class="log-entry">-->
-<!--        <div class="log-entry-details" id = "msg4"></div>-->
-<!--    </div>-->
-<!--    <div class="log-entry">-->
-<!--        <div class="log-entry-details" id = "msg5"></div>-->
-<!--    </div>-->
 </div>
 </body>
 
