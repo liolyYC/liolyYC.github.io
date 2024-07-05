@@ -282,8 +282,8 @@
                 aclMax.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 aclMax.addEventListener('reading', () => {
                     log2(aclMax.timestamp, aclMax.x, aclMax.y, aclMax.z);
-                    var freq = OriMax.getSamplingFrequency();
-                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                    // var freq = OriMax.getSamplingFrequency();
+                    // document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
                 });
                 aclMax.start();
                 // var freq = aclMax.getSamplingFrequency();
@@ -319,7 +319,7 @@
     <p>z: <span id="z2">0</span></p>
     <p>w: <span id="w2">0</span></p>
     <h1 id = "freq2">0Hz</h1>
-    <h1 id="maxfreq">频率上限:0Hz</h1>
+<!--    <h1 id="maxfreq">频率上限:0Hz</h1>-->
 
     <h1>加速度数据</h1>
     <h2 id="log"></h2>

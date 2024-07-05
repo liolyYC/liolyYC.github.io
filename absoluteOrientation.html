@@ -340,8 +340,8 @@
                 OriMax.addEventListener('reading', () => {
                     console.log(`[NEU]quaternion: ${OriMax.quaternion}`);
                     log3(OriMax.timestamp, OriMax.quaternion);
-                    var freq = OriMax.getSamplingFrequency();
-                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                    // var freq = OriMax.getSamplingFrequency();
+                    // document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
                 });
                 OriMax.start();
                 // OriMax.stop();
@@ -378,7 +378,7 @@
     <p>z: <span id="z3">0</span></p>
     <p>w: <span id="w3">0</span></p>
     <h1 id = "freq3">0Hz</h1>
-    <h1 id="maxfreq">频率上限:0Hz</h1>
+<!--    <h1 id="maxfreq">频率上限:0Hz</h1>-->
 
 <!--    <h1>方向数据</h1>-->
 <!--    <h2 id = "log"></h2>-->

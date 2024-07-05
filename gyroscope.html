@@ -282,8 +282,8 @@
                 gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
                 gyr.addEventListener('reading', () => {
                     log2(gyr.timestamp, gyr.x, gyr.y, gyr.z);
-                    var freq = OriMax.getSamplingFrequency();
-                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                    // var freq = OriMax.getSamplingFrequency();
+                    // document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
                 });
                 gyr.start();
                 // var freq = gyr.getSamplingFrequency();
@@ -322,7 +322,7 @@
     <p>beta: <span id="beta2">0</span></p>
     <p>gamma: <span id="gamma2">0</span></p>
     <h1 id = "freq2">0Hz</h1>
-    <h1 id="maxfreq">频率上限:0Hz</h1>
+<!--    <h1 id="maxfreq">频率上限:0Hz</h1>-->
 
     <h3>陀螺仪数据:</h3>
     <h4 id = "log"></h4>
