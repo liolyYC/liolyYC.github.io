@@ -265,8 +265,7 @@
         function handleMotionEvent(event) {
             let rotationRate = event.rotationRate;
             if (rotationRate) {
-              let { z, x, y } = rotationRate;
-              log(event.timeStamp, z, x, y);
+              log(event.timeStamp, rotationRate.alpha, rotationRate.beta, rotationRate.gamma);
             }
         }
 
