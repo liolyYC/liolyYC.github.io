@@ -230,8 +230,7 @@
         function checkSensorsPermission() {
             document.getElementById('log2').textContent = '检查权限';
             Promise.all([
-                navigator.permissions.query({ name: 'accelerometer' }),
-                navigator.permissions.query({ name: 'gyroscope' })
+                navigator.permissions.query({ name: 'accelerometer' })
                 ]).then(results => {
                     const accelerometerPermission = results[0];
                     const gyroscopePermission = results[1];
@@ -273,17 +272,23 @@
         var aclMax;
         function TestfrequencyIsCappedToAllowedMaximum() {
             delw3cacc();
-            aclMax = new Accelerometer({frequency: 560});
-            aclMax.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-            aclMax.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-            aclMax.addEventListener('reading', () => {
-                log2(aclMax.timestamp, aclMax.x, aclMax.y, aclMax.z);
-                var freq = OriMax.getSamplingFrequency();
-                document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+                aclMax = new Accelerometer({frequency: 560});
+                aclMax.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                aclMax.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                aclMax.addEventListener('reading', () => {
+                    log2(aclMax.timestamp, aclMax.x, aclMax.y, aclMax.z);
+                    var freq = OriMax.getSamplingFrequency();
+                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                });
+                aclMax.start();
+                // var freq = aclMax.getSamplingFrequency();
+                // aclMax.stop();
             });
-            aclMax.start();
-            // var freq = aclMax.getSamplingFrequency();
-            // aclMax.stop();
         }
     </script>
 </head>

@@ -272,17 +272,23 @@
 
         function TestfrequencyIsCappedToAllowedMaximum() {
             delw3cacc();
-            gyr = new Gyroscope({frequency: 560});
-            gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-            gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-            gyr.addEventListener('reading', () => {
-                log2(gyr.timestamp, gyr.x, gyr.y, gyr.z);
-                var freq = OriMax.getSamplingFrequency();
-                document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+            navigator.permissions.query({ name: 'gyroscope' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use gyroscope sensor is denied.');
+                    return;
+                }
+                gyr = new Gyroscope({frequency: 560});
+                gyr.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                gyr.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                gyr.addEventListener('reading', () => {
+                    log2(gyr.timestamp, gyr.x, gyr.y, gyr.z);
+                    var freq = OriMax.getSamplingFrequency();
+                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                });
+                gyr.start();
+                // var freq = gyr.getSamplingFrequency();
+                // gyr.stop();
             });
-            gyr.start();
-            // var freq = gyr.getSamplingFrequency();
-            // gyr.stop();
         }
 
 

@@ -329,17 +329,23 @@
         var OriMax;
         function TestfrequencyIsCappedToAllowedMaximum() {
             delw3cacc();
-            OriMax = new RelativeOrientationSensor({frequency: 560});
-            OriMax.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
-            OriMax.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
-            OriMax.addEventListener('reading', () => {
-                console.log(`[NEU]quaternion: ${OriMax.quaternion}`);
-                log3(OriMax.timestamp, OriMax.quaternion);
-                var freq = OriMax.getSamplingFrequency();
-                document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+            navigator.permissions.query({ name: 'accelerometer' }).then(result => {
+                if (result.state === 'denied') {
+                    console.log('[NEU]Permission to use accelerometer sensor is denied.');
+                    return;
+                }
+                OriMax = new RelativeOrientationSensor({frequency: 560});
+                OriMax.addEventListener('activate', () => console.log('[NEU]Ready to measure.'));
+                OriMax.addEventListener('error', error => console.log(`[NEU]Error: ${error.name}`));
+                OriMax.addEventListener('reading', () => {
+                    console.log(`[NEU]quaternion: ${OriMax.quaternion}`);
+                    log3(OriMax.timestamp, OriMax.quaternion);
+                    var freq = OriMax.getSamplingFrequency();
+                    document.getElementById('maxfreq').textContent = '频率上限: ' + freq;
+                });
+                OriMax.start();
+                // OriMax.stop();
             });
-            OriMax.start();
-            // OriMax.stop();
         }
     </script>
 </head>
