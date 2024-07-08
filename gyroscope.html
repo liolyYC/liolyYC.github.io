@@ -59,8 +59,18 @@
                 var feq = 1000 / avg;
                 document.getElementById(id).textContent = feq.toFixed(2) + " HZ";
                 timestampArray = [];
+                updateEcharts();
             }
         }
+
+        updateEcharts(){
+            option.xAxis.option = xAxisDataList;
+            option.series[0].data = DataListAlpha;
+            option.series[1].data = DataListBeta;
+            option.series[2].data = DataListGamma;
+            myChart.setOption(option);
+        }
+
         function setTimestamp2(timestamp, id) {
             timestampArray2.push(timestamp);
             console.log(`${timestampArray2.length}`);
