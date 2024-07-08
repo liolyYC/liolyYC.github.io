@@ -6,6 +6,7 @@
     <meta name="misapplication-tap-highlight" content="no" />
     <meta name="HandheldFriendly" content="true" />
     <meta name="MobileOptimized" content="320" />
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <title>陀螺仪传感器</title>
     <meta charset="UTF-8">
     <style>
@@ -29,20 +30,25 @@
         var timestampArray = [];
         var timestampArray2 = [];
         function log(timestamp, alpha, beta, gamma) {
-             document.getElementById('alpha').textContent = alpha;
-             document.getElementById('beta').textContent = beta;
-             document.getElementById('gamma').textContent = gamma;
-             setTimestamp(timestamp, 'freq');
+            document.getElementById('alpha').textContent = alpha;
+            document.getElementById('beta').textContent = beta;
+            document.getElementById('gamma').textContent = gamma;
+            setTimestamp(timestamp, 'freq');
+
+            DataListAlpha.push(alpha);
+            DataListBeta.push(beta);
+            DataListGamma.push(gamma);
         }
         function log2(timestamp, x, y, z) {
-             document.getElementById('x').textContent = x;
-             document.getElementById('y').textContent = y;
-             document.getElementById('z').textContent = z;
-             setTimestamp2(timestamp, 'freq2');
+            document.getElementById('x').textContent = x;
+            document.getElementById('y').textContent = y;
+            document.getElementById('z').textContent = z;
+            setTimestamp2(timestamp, 'freq2');
         }
 
         function setTimestamp(timestamp, id) {
             timestampArray.push(timestamp);
+            xAxisDataList.push(timestamp);
             console.log(`${timestampArray.length}`);
             if ((timestampArray.length - 60) === 0) {
                 var sum = 0;
@@ -313,6 +319,7 @@
         <button type="button" onclick="delGyr()">取消监听陀螺仪数据</button>
     </ul>
 </div>
+<div id="main" style="width: 600px;height:400px;"></div>
 <div id="output">
     <h2 style="color:red;">输出OUT：</h2>
     <h3>w3c</h3>
@@ -332,5 +339,66 @@
     <h4 id = "freq">0hz</h4>
 </div>
 </body>
+<script>
 
+// 基于准备好的容器初始化 echarts 实例
+var myChart = echarts.init(document.getElementById('main'));
+
+var xAxisDataList = [];
+var DataListAlpha = [];
+var DataListBeta = [];
+var DataListGamma = [];
+
+// 指定图表的配置项和数据
+var option = {
+    title: {
+        text: 'ECharts 曲线图示例'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['Alpha', 'Beta', 'Gamma']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: dateList
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'Alpha',
+            type:'line',
+            data:DataListAlpha
+        },
+        {
+            name:'Beta',
+            type:'line',
+            data:DataListBeta
+        },
+        {
+            name:'Gamma',
+            type:'line',
+            data:DataListGamma
+        }
+    ]
+};
+
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option);
+</script>
 </html>
