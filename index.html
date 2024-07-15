@@ -233,10 +233,8 @@
                 navigator.permissions.query({ name: 'accelerometer' })
                 ]).then(results => {
                     const accelerometerPermission = results[0];
-                    const gyroscopePermission = results[1];
                     document.getElementById('log2').textContent = '检查权限成功';
                     console.log(`[NEU]加速度计权限: ${accelerometerPermission.state}`);
-                    console.log(`[NEU]陀螺仪权限: ${gyroscopePermission.state}`);
             }).catch(error => {
                 console.error('[NEU]权限查询失败:', error);
                 document.getElementById('log2').textContent = '检查权限失败' + error;
