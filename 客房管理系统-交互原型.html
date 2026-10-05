@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>客房管理系统 · 高保真交互原型 V2</title>
+<style>
+:root{
+  --blue:#1E4B9B;--blue2:#2E6BC9;--gold:#F5C21B;--red:#E8354E;--orange:#F7941E;
+  --green:#2FA36B;--ink:#17233D;--sub:#8492A6;--bg:#F4F6FA;--line:#EDF0F5;
+  --side:#1B2A47;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:radial-gradient(1200px 600px at 20% 0%,#1B2C55 0%,#0F1B33 55%,#0B1426 100%);
+  display:flex;align-items:center;justify-content:center;gap:44px;
+  padding:28px;color:var(--ink);overflow:auto;
+}
+/* ============ 左侧演示控制面板 ============ */
+.panel{width:344px;color:#DDE6F5;flex:none}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#1E4B9B,#2E6BC9);position:relative;flex:none;box-shadow:0 8px 20px rgba(46,107,201,.35)}
+.logo::after{content:'';position:absolute;inset:12px;border-radius:4px;background:var(--gold);box-shadow:-7px -7px 0 rgba(232,53,78,.85)}
+.brand h1{font-size:19px;color:#fff;letter-spacing:.5px}
+.brand p{font-size:12px;color:rgba(221,230,245,.55);margin-top:3px}
+.pblock{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px;margin-bottom:14px}
+.pblock h3{font-size:12px;color:rgba(221,230,245,.5);font-weight:600;letter-spacing:1px;margin-bottom:12px}
+.pnote{font-size:11px;color:rgba(221,230,245,.45);line-height:1.75;margin-top:10px}
+.seg{display:flex;background:rgba(0,0,0,.28);border-radius:11px;padding:4px;gap:4px}
+.seg button{flex:1;height:38px;border:none;border-radius:8px;background:transparent;color:#B9C6E0;font-size:12.5px;cursor:pointer;font-weight:600;font-family:inherit;transition:.15s}
+.seg button.on{background:var(--gold);color:#231A00}
+.gstep{display:flex;gap:10px;align-items:flex-start;margin-bottom:13px}
+.gstep:last-child{margin-bottom:2px}
+.gstep i{width:21px;height:21px;border-radius:50%;background:var(--gold);color:#231A00;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;font-style:normal;margin-top:1px}
+.gstep b{font-size:13px;color:#fff;display:block}
+.gstep span{font-size:11px;color:rgba(221,230,245,.5);display:block;margin-top:3px;line-height:1.5}
+.gstep button{margin-left:auto;flex:none;height:27px;padding:0 13px;border-radius:9px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font-size:11.5px;cursor:pointer;transition:.15s;font-family:inherit}
+.gstep button:hover{background:rgba(255,255,255,.12)}
+.resetbtn{width:100%;height:40px;border-radius:11px;border:1px dashed rgba(255,255,255,.32);background:transparent;color:#fff;font-size:13px;cursor:pointer;transition:.15s;font-family:inherit}
+.resetbtn:hover{background:rgba(255,255,255,.08)}
+/* ============ 手机壳 ============ */
+.phone{
+  width:392px;height:848px;flex:none;position:relative;overflow:hidden;
+  border-radius:56px;border:11px solid #171B22;background:var(--bg);
+  box-shadow:0 50px 100px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);
+  display:flex;flex-direction:column;
+}
+.phone.hide{display:none}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:32px;background:#171B22;border-radius:20px;z-index:60}
+.statusbar{height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 30px 0;font-size:14px;font-weight:700;color:var(--ink)}
+.sb-right{color:var(--ink);display:flex}
+.wxnav{height:46px;flex:none;display:flex;align-items:center;padding:0 10px;position:relative;z-index:5}
+.wx-back{width:34px;height:34px;border:none;background:transparent;font-size:26px;line-height:1;color:var(--ink);cursor:pointer;visibility:hidden;font-family:serif}
+.wx-title{flex:1;text-align:center;font-size:16px;font-weight:600;color:var(--ink);margin-left:-24px;pointer-events:none}
+.screenwrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:12px 13px 30px;animation:slidein .22s ease;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.noanim{animation:none}
+@keyframes slidein{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.tabbar{height:62px;flex:none;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:4px}
+.tabbar.hide{display:none}
+.titem{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:#9AA5B5;cursor:pointer;font-family:inherit}
+.titem.on{color:var(--blue);font-weight:600}
+.titem svg{width:23px;height:23px}
+.hi{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:126px;height:5px;border-radius:3px;background:#111;opacity:.85;z-index:70;pointer-events:none}
+/* ============ 窄屏（手机）查看：设备铺满视口，演示面板收为浮层 ============ */
+.panelFab{display:none}
+.panelClose{display:none}
+@media (max-width:900px){
+  body{display:block;padding:0;overflow-x:hidden}
+  .panel{position:fixed;inset:0;z-index:300;width:auto;overflow-y:auto;background:linear-gradient(160deg,#16234A,#0B1426);padding:18px 18px 66px;display:none}
+  .panel.open{display:block}
+  .panelClose{display:flex;align-items:center;justify-content:center;width:34px;height:34px;margin:0 0 14px auto;border:none;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;cursor:pointer}
+  .panelFab{display:flex;align-items:center;justify-content:center;gap:8px;position:fixed;left:0;right:0;bottom:0;height:46px;z-index:310;border:none;border-top:1px solid rgba(255,255,255,.12);background:#0B1426;color:var(--gold);font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;font-family:inherit}
+  .phone{width:100%;height:calc(100vh - 46px);height:calc(100dvh - 46px);border:none;border-radius:0;box-shadow:none}
+  .island,.hi{display:none}
+  .pc{transform-origin:top left}
+}
+/* ============ PC 外壳（若依风格） ============ */
+.pc{width:1180px;height:760px;flex:none;position:relative;background:#fff;border-radius:14px;overflow:hidden;
+  box-shadow:0 50px 100px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;font-size:13px;color:#303133}
+.pc.hide{display:none}
+.pc-top{height:56px;flex:none;background:linear-gradient(90deg,#1E4B9B,#2E6BC9);display:flex;align-items:center;padding:0 20px;color:#fff;gap:12px}
+:root{--logo:url("data:image/png;base64,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")}
+.pc-logo{width:30px;height:30px;border-radius:50%;background:var(--logo) center/cover no-repeat;box-shadow:0 0 0 1.5px rgba(255,255,255,.32);flex:none}
+
+.hero-logo{width:46px;height:46px;border-radius:50%;background:var(--logo) center/cover no-repeat;box-shadow:0 0 0 2px rgba(255,255,255,.32);margin-bottom:11px;position:relative;z-index:1}
+
+.pc-title{font-size:16px;font-weight:600;letter-spacing:.5px}
+.pc-user{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,.94)}
+.pc-exit{width:27px;height:27px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.14);cursor:pointer;border:none;color:#fff}
+.pc-exit:hover{background:rgba(255,255,255,.26)}
+.pc-body{flex:1;display:flex;min-height:0}
+.pc-side{width:210px;flex:none;background:var(--side);overflow-y:auto;padding:10px 0;color:#C3CDE0;scrollbar-width:thin}
+.mgroup-h{display:flex;justify-content:space-between;align-items:center;padding:0 16px;height:40px;font-size:12px;color:#7C8BA8;letter-spacing:1.5px;cursor:pointer;user-select:none}
+.mgroup-h:hover{color:#A9B7D0}
+.marrow{font-size:11px}
+.mitem{display:flex;align-items:center;gap:9px;height:42px;padding:0 16px 0 26px;font-size:13.5px;cursor:pointer;position:relative;color:#C3CDE0;user-select:none}
+.mitem:hover{background:rgba(255,255,255,.05);color:#fff}
+.mitem.on{background:linear-gradient(90deg,rgba(46,107,201,.95),rgba(46,107,201,.3));color:#fff;font-weight:600}
+.mitem.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.mdot{width:5px;height:5px;border-radius:50%;background:#5E6E8C;flex:none}
+.mitem.on .mdot{background:var(--gold)}
+.pc-main{flex:1;min-width:0;display:flex;flex-direction:column;background:#F4F6FA}
+.pc-crumb{height:46px;flex:none;display:flex;align-items:center;gap:8px;padding:0 18px;background:#fff;border-bottom:1px solid #EBEEF5;font-size:13px;color:#8492A6}
+.c-sep{color:#C0C4CC}
+.c-cur{color:#303133;font-weight:600}
+.pc-content{flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column}
+.pc-content>.assign-root{flex:1;min-height:0;display:flex;flex-direction:column}
+/* 查询条件区 */
+.qbar{background:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;box-shadow:0 1px 2px rgba(23,35,61,.04)}
+.qfield{display:flex;flex-direction:column;gap:6px}
+.qfield>label{font-size:12px;color:#8492A6}
+.qfield input,.qfield select{height:34px;min-width:150px;border:1px solid #DCDFE6;border-radius:5px;padding:0 10px;font-size:13px;color:#303133;background:#fff;outline:none;font-family:inherit}
+.qfield input:focus,.qfield select:focus{border-color:var(--blue2)}
+.qbtns{display:flex;gap:8px}
+/* 表格 */
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tablewrap{background:#fff;border-radius:8px;overflow:auto;box-shadow:0 1px 2px rgba(23,35,61,.04)}
+.rtable{width:100%;border-collapse:collapse}
+.rtable th{background:#F8F8F9;color:#5A6472;font-size:12.5px;font-weight:600;text-align:left;padding:11px 14px;border-bottom:1px solid #EBEEF5;white-space:nowrap}
+.rtable td{padding:11px 14px;border-bottom:1px solid #EBEEF5;color:#33415C;font-size:13px;vertical-align:middle}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tbody tr:hover{background:#FAFBFF}
+.emptytd{text-align:center;color:#A6B0C2;padding:28px 0}
+.ops{display:flex;gap:6px;flex-wrap:wrap}
+.pager{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:12px 4px 0;font-size:13px;color:#606266}
+.pgbtn{min-width:28px;height:28px;border:1px solid #DCDFE6;background:#fff;border-radius:4px;font-size:12px;color:#606266;cursor:pointer;font-family:inherit}
+.pgbtn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.pgbtn:disabled{opacity:.5;cursor:not-allowed}
+.pgsize{height:28px;border:1px solid #DCDFE6;border-radius:4px;background:#fff;color:#606266;font-size:12px;padding:0 6px}
+.pc .btn{height:32px;border-radius:6px;font-size:13px;padding:0 14px}
+.pc .btn-sm{height:27px;font-size:12px;border-radius:5px;padding:0 10px}
+.pc .btn-block{width:100%}
+/* PC 弹窗 */
+#pcModals{position:absolute;inset:0;z-index:80;display:none}
+#pcModals.show{display:block}
+.pcdialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;max-width:90%;max-height:86%;background:#fff;border-radius:9px;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.42);animation:pop .2s;scrollbar-width:thin}
+.pcdialog.sm{width:430px}
+@keyframes pop{from{opacity:0;transform:translate(-50%,-46%) scale(.97)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.m-head{padding:14px 18px;border-bottom:1px solid #EBEEF5;font-size:15px;font-weight:600;color:#303133;display:flex;justify-content:space-between;align-items:center}
+.m-head .shx{position:static}
+.m-body{padding:18px}
+.sheet .m-body{padding:0}
+#pcToast{position:absolute;top:38%;left:0;right:0;display:flex;justify-content:center;z-index:99;pointer-events:none}
+/* 分配页（PC） */
+.assign-cols{flex:1;min-height:0;display:flex;gap:14px}
+.acol{flex:1;min-width:0;background:#fff;border-radius:8px;display:flex;flex-direction:column;min-height:0;box-shadow:0 1px 2px rgba(23,35,61,.04)}
+.acol-h{padding:12px 14px;border-bottom:1px solid #EBEEF5;font-weight:600;font-size:13.5px;color:#303133;display:flex;justify-content:space-between;align-items:center}
+.acol-f{padding:10px 14px;border-bottom:1px solid #EBEEF5;display:flex;gap:10px;align-items:center}
+.acol-b{padding:12px 14px;overflow-y:auto;flex:1;min-height:0}
+.assign-bar{margin-top:14px;background:#fff;border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 2px rgba(23,35,61,.04);flex-wrap:wrap}
+/* ============ 通用组件（手机端复用） ============ */
+.card{background:#fff;border-radius:15px;padding:14px;box-shadow:0 1px 2px rgba(23,35,61,.05);margin-bottom:12px}
+.sec-t{font-size:13.5px;font-weight:700;margin:2px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.sec-t .more{font-size:11.5px;color:var(--sub);font-weight:400}
+.sub{font-size:11.5px;color:var(--sub);line-height:1.6}
+.grow{flex:1;min-width:0}
+.tag{font-size:10.5px;padding:2.5px 7px;border-radius:6px;font-weight:600;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;vertical-align:middle}
+.tg-blue{background:#E8F0FE;color:#1E4B9B}
+.tg-green{background:#E5F6EE;color:#1F8F5F}
+.tg-orange{background:#FDF0E0;color:#C2660A}
+.tg-red{background:#FDEBEE;color:#D02343}
+.tg-gold{background:#FBF1CC;color:#8A6D00}
+.tg-gray{background:#EFF1F5;color:#7A8699}
+.tg-male{background:#EAF2FB;color:#2A5C9A}
+.tg-female{background:#FCEFF4;color:#A63D6B}
+.btn{height:44px;border-radius:12px;border:none;font-size:15px;font-weight:600;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-family:inherit;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,#1E4B9B,#2E6BC9);color:#fff;box-shadow:0 6px 14px rgba(46,107,201,.28)}
+.btn-gold{background:var(--gold);color:#3A2C00}
+.btn-green{background:var(--green);color:#fff}
+.btn-danger{background:#fff;color:var(--red);border:1px solid #F3C4CC}
+.btn-danger-solid{background:var(--red);color:#fff}
+.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.pc .btn-ghost{border-color:#DCDFE6}
+.btn-sm{height:30px;font-size:12px;border-radius:9px;padding:0 11px;font-weight:500}
+.btn-block{width:100%}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:5.5px 13px;border-radius:999px;background:#fff;font-size:12px;color:var(--sub);border:1px solid var(--line);white-space:nowrap;cursor:pointer;flex:none;font-family:inherit}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.avt{width:34px;height:34px;border-radius:50%;background:#E8F0FE;color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.avt.m{background:#FBF1CC;color:#8A6D00}
+.avt svg{width:18px;height:18px}
+.row b{font-size:14px}
+.empty{text-align:center;color:#A6B0C2;font-size:12.5px;padding:22px 0}
+.empty .e{font-size:24px;display:block;margin-bottom:8px}
+.tipbar{background:#F3F7FF;border:1px dashed #B9CFF5;color:#3A66B8;font-size:11.5px;border-radius:11px;padding:9px 11px;margin-bottom:12px;line-height:1.8}
+.flowtip{background:#FFFBEA;border:1px dashed #EBD48A;color:#8A6D00;font-size:11.5px;border-radius:11px;padding:9px 11px;margin-bottom:12px;line-height:1.9}
+.hero{background:linear-gradient(135deg,#1E4B9B 0%,#2E6BC9 100%);border-radius:17px;padding:19px 17px;color:#fff;margin-bottom:12px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-34px;top:-38px;width:130px;height:130px;border-radius:50%;background:rgba(245,194,27,.16)}
+.hero::before{content:'';position:absolute;right:26px;bottom:-46px;width:90px;height:90px;border-radius:50%;border:14px solid rgba(255,255,255,.07)}
+.hero .h-kicker{font-size:11px;letter-spacing:2px;opacity:.75;display:flex;align-items:center;gap:6px}
+.hero h2{font-size:21px;margin:8px 0 5px;letter-spacing:1px}
+.hero .h-sub{font-size:12px;opacity:.78}
+.stats{display:flex;background:#fff;border-radius:15px;padding:14px 0;margin-bottom:12px;box-shadow:0 1px 2px rgba(23,35,61,.05)}
+.stat{flex:1;text-align:center;border-right:1px solid var(--line);cursor:pointer;transition:background .15s}
+.stat:active{background:#EEF3FB}
+.stat:active b{color:var(--blue)}
+.stat:last-child{border-right:none}
+.stat b{font-size:22px;color:var(--ink)}
+.stat span{font-size:11px;color:var(--sub);display:block;margin-top:3px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.gitem{background:#fff;border-radius:14px;padding:14px 4px 12px;text-align:center;font-size:11.5px;color:var(--ink);cursor:pointer;box-shadow:0 1px 2px rgba(23,35,61,.05);border:none;font-family:inherit;position:relative}
+.gitem svg{width:24px;height:24px;display:block;margin:0 auto 7px;color:var(--blue)}
+.gitem .gi{font-size:22px;display:block;margin-bottom:6px}
+.gitem .gbadge{position:absolute;top:6px;right:8px;min-width:16px;height:16px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;line-height:16px;padding:0 4px;font-weight:700}
+.qlist .row b{font-size:13.5px}
+.rooms{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.roomcard{background:#fff;border-radius:13px;padding:12px;cursor:pointer;box-shadow:0 1px 2px rgba(23,35,61,.05);border:1.5px solid transparent;position:relative}
+.roomcard:active{transform:scale(.98)}
+.roomno{font-size:17px;font-weight:800;padding-right:26px}
+.redit{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:8px;border:1px solid var(--line);background:#FAFBFD;color:var(--sub);font-size:12px;line-height:1;padding:0;cursor:pointer;font-family:inherit;transition:.15s}
+.redit:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.rtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.gchip{display:inline-flex;align-items:center;gap:4px;background:#F7F8FB;border:1px solid var(--line);padding:3.5px 9px;border-radius:999px;font-size:11.5px;color:var(--ink)}
+.gchip.warn{background:#FDF0E0;border-color:#F3D9B5;color:#C2660A}
+.gchip.gold{background:#FBF1CC;border-color:#EBD48A;color:#8A6D00}
+.gchip.blue{background:#E8F0FE;border-color:#B9CFF5;color:#1E4B9B}
+.mixhint{margin-top:8px;background:#FFFBEA;border:1px dashed #EBD48A;border-radius:9px;padding:6.5px 9px;font-size:11px;color:#8A6D00;line-height:1.6}
+.fi{margin-bottom:13px}
+.fi label{font-size:12px;color:var(--sub);display:block;margin-bottom:6px;font-weight:600}
+.fi input,.fi textarea,.fi select{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;font-size:14px;background:#FAFBFD;outline:none;font-family:inherit;color:var(--ink)}
+.fi input:focus,.fi textarea:focus,.fi select:focus{border-color:var(--blue2);background:#fff}
+.fi input:disabled{background:#F1F3F8;color:var(--sub)}
+.fi select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9AA5B5 50%),linear-gradient(135deg,#9AA5B5 50%,transparent 50%);background-position:calc(100% - 19px) 19px,calc(100% - 14px) 19px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}
+.fi textarea{resize:none;height:70px}
+.d2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ckrow{display:flex;align-items:center;gap:10px;padding:9.5px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.ckrow:last-child{border-bottom:none}
+.ckrow.dis{opacity:.45;cursor:not-allowed}
+.ckbox{width:19px;height:19px;border-radius:6px;border:1.6px solid #C6CFDC;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800}
+.ckrow.on .ckbox{background:var(--blue);border-color:var(--blue)}
+.rcard{border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#fff;gap:8px}
+.rcard.on{border-color:var(--blue);background:#F3F7FF}
+.rcard.dis{opacity:.55;background:#F7F8FA;cursor:not-allowed}
+.radio{width:18px;height:18px;border-radius:50%;border:1.6px solid #C6CFDC;flex:none;position:relative}
+.rcard.on .radio{border-color:var(--blue)}
+.rcard.on .radio::after{content:'';position:absolute;inset:3.5px;border-radius:50%;background:var(--blue)}
+.kv{display:flex;justify-content:space-between;padding:6.5px 0;font-size:13px}
+.kv span{color:var(--sub)}
+.kv b{font-weight:600;text-align:right}
+#modals{position:absolute;inset:0;z-index:80;display:none}
+#modals.show{display:block}
+.mask{position:absolute;inset:0;background:rgba(10,16,28,.55);animation:fade .2s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:15px 16px 34px;max-height:80%;overflow-y:auto;animation:up .26s ease;scrollbar-width:none}
+.sheet::-webkit-scrollbar{display:none}
+@keyframes up{from{transform:translateY(70px);opacity:.35}to{transform:none;opacity:1}}
+.sheet-t{font-size:16px;font-weight:700;text-align:center;margin-bottom:13px;position:relative}
+.shx{position:absolute;right:-4px;top:-4px;width:30px;height:30px;border:none;background:transparent;font-size:15px;color:var(--sub);cursor:pointer;font-family:inherit}
+#toastRoot{position:absolute;top:44%;left:0;right:0;display:flex;justify-content:center;z-index:99;pointer-events:none}
+.toast{background:rgba(17,24,39,.9);color:#fff;padding:10px 18px;border-radius:11px;font-size:13px;max-width:80%;text-align:center;animation:fade .18s;line-height:1.6}
+.bedprog{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sub);margin-bottom:8px}
+.bedprog b{color:var(--ink)}
+.bedprog.over b{color:var(--red)}
+.confirm-desc{font-size:13px;color:#4A5568;line-height:1.95;padding:2px 2px 0}
+.stickbar{position:sticky;bottom:-2px;background:linear-gradient(180deg,rgba(244,246,250,.4),var(--bg) 32%);padding:12px 0 6px;display:flex;gap:10px;align-items:center;margin-top:4px}
+.stickbar .btn{flex:none}
+.stickbar .btn.main{flex:1}
+</style>
+</head>
+<body>
+<aside class="panel" id="panel">
+  <button class="panelClose" data-act="togglePanel" title="收起演示控制">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="brand">
+    <div class="logo"></div>
+    <div>
+      <h1>客房管理系统</h1>
+      <p>高保真交互原型 V2.0 · 本地内网部署</p>
+    </div>
+  </div>
+  <div class="pblock">
+    <h3>预览端</h3>
+    <div class="seg" id="modeSeg">
+      <button data-act="switchMode" data-mode="pc">后台管理端（PC）</button>
+      <button data-act="switchMode" data-mode="mobile" class="on">手机端</button>
+    </div>
+    <p class="pnote">默认展示手机端（窄屏下自动铺满屏幕）。两端共享同一份模拟数据，任意操作实时互通。</p>
+  </div>
+  <div class="pblock">
+    <h3>推荐演示流程</h3>
+    <div class="gstep"><i>1</i><div><b>房间分配 · 分配即入住</b><span>选房间 → 选住客 → 确认分配，一步生成入住记录</span></div><button data-act="jump" data-mode="pc" data-page="b-assign">进入</button></div>
+    <div class="gstep"><i>2</i><div><b>在住概览 · 退房与清扫</b><span>办理退房 → 房间置空闲且待清扫 → 标记已清扫</span></div><button data-act="jump" data-mode="pc" data-page="b-stay">进入</button></div>
+    <div class="gstep"><i>3</i><div><b>入住记录查询</b><span>按入住人 / 楼栋房间 / 入住日期区间组合查询</span></div><button data-act="jump" data-mode="pc" data-page="b-records">进入</button></div>
+    <div class="gstep"><i>4</i><div><b>房间管理 · 增删改</b><span>床位校验、加床、删除引用校验</span></div><button data-act="jump" data-mode="pc" data-page="b-rooms">进入</button></div>
+    <div class="gstep"><i>5</i><div><b>手机端房间与分配</b><span>底部 4 tab，房间详情 / 分配住客</span></div><button data-act="jump" data-mode="mobile" data-screen="rooms">进入</button></div>
+  </div>
+  <div class="pblock">
+    <button class="resetbtn" data-act="reset">↺ 重置演示数据</button>
+    <p class="pnote">
+      新版设计：<b style="color:#DDE6F5">若依（RuoYi）+ Vue3 + Spring Boot</b>，前后端分离，部署于本地内网。<br>
+      无旅客端、无预约申请单、无房间锁定机制；全部业务由管理员完成。核心为「分配住客即入住」——选中房间与住客后一次确认，立即生成入住记录并把房间状态置为已入住。
+    </p>
+  </div>
+</aside>
+<button class="panelFab" data-act="togglePanel">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  演示控制
+</button>
+
+<!-- ============ 后台管理端（PC） ============ -->
+<div class="pc hide" id="pcShell">
+  <div class="pc-top">
+    <div class="pc-logo"></div>
+    <div class="pc-title">客房管理系统</div>
+    <div class="pc-user">
+      <span>客堂管理员</span>
+      <button class="pc-exit" data-act="pcExit" title="退出登录">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 18 20h-3"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h9"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="pc-body">
+    <div class="pc-side" id="pcSide"></div>
+    <div class="pc-main">
+      <div class="pc-crumb" id="pcCrumb"></div>
+      <div class="pc-content" id="pcContent"></div>
+    </div>
+  </div>
+  <div id="pcModals"></div>
+  <div id="pcToast"></div>
+</div>
+
+<!-- ============ 手机端 ============ -->
+<div class="phone hide" id="phone">
+  <div class="island"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-right"><svg width="52" height="13" viewBox="0 0 52 13" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="0.8"/><rect x="4.5" y="5" width="3" height="7" rx="0.8"/><rect x="9" y="3" width="3" height="9" rx="0.8"/><rect x="13.5" y="1" width="3" height="11" rx="0.8"/><path d="M25 4.2c2.1-1.9 5.2-1.9 7.3 0l-1.3 1.4c-1.4-1.2-3.3-1.2-4.7 0z"/><circle cx="28.6" cy="8.4" r="1.7"/><rect x="38" y="2.5" width="11.5" height="8" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="39.6" y="4.1" width="6.6" height="4.8" rx="1"/><rect x="50.3" y="5" width="1.5" height="3" rx="0.7"/></svg></span>
+  </div>
+  <div class="wxnav">
+    <button class="wx-back" data-act="navBack" id="navBack">‹</button>
+    <div class="wx-title" id="navTitle">首页</div>
+  </div>
+  <div class="screenwrap" id="screenwrap"></div>
+  <div class="tabbar hide" id="tabbar"></div>
+  <div class="hi"></div>
+  <div id="modals"></div>
+  <div id="toastRoot"></div>
+</div>
+
+<script>
+"use strict";
+/* =================================================================
+   客房管理系统 · 高保真交互原型 V2
+   纯静态单文件，可离线双击打开；无任何外部资源依赖。
+   ================================================================= */
+
+/* ================= 常量 ================= */
+const TODAY='2026-10-03';
+const ADMIN_NAME='客堂管理员';
+
+/* ================= 模拟数据 ================= */
+let db=seed();
+function seed(){
+  return {
+    buildings:[
+      {id:1,name:'慈云楼',remark:'临山而建，环境清幽'},
+      {id:2,name:'禅悦楼',remark:'近客堂，办理入住方便'}
+    ],
+    roomTypes:[
+      {id:1,name:'单人间',bedCount:1,remark:'1 床，适合单人静修'},
+      {id:2,name:'双人间',bedCount:2,remark:'2 床，可加床至 3 床'},
+      {id:3,name:'四人间',bedCount:4,remark:'4 床，适合结伴同修'}
+    ],
+    rooms:[
+      {id:1,buildingId:1,roomNo:'101',typeId:1,status:0,needClean:0,extraBeds:0,remark:'',delFlag:0},
+      {id:2,buildingId:1,roomNo:'102',typeId:3,status:1,needClean:0,extraBeds:0,remark:'靠窗，采光好',delFlag:0},
+      {id:3,buildingId:1,roomNo:'103',typeId:2,status:0,needClean:0,extraBeds:0,remark:'',delFlag:0},
+      {id:4,buildingId:1,roomNo:'104',typeId:3,status:2,needClean:0,extraBeds:0,remark:'空调检修中',delFlag:0},
+      {id:5,buildingId:2,roomNo:'201',typeId:1,status:1,needClean:0,extraBeds:0,remark:'',delFlag:0},
+      {id:6,buildingId:2,roomNo:'202',typeId:2,status:0,needClean:0,extraBeds:0,remark:'',delFlag:0},
+      {id:7,buildingId:2,roomNo:'203',typeId:3,status:0,needClean:1,extraBeds:1,remark:'已加床 1 张',delFlag:0},
+      {id:8,buildingId:1,roomNo:'105',typeId:2,status:0,needClean:0,extraBeds:0,remark:'',delFlag:0}
+    ],
+    guests:[
+      {id:1,name:'张三',gender:1,type:1,phone:'138****1234'},
+      {id:2,name:'李四',gender:0,type:0,phone:'139****5678'},
+      {id:3,name:'王五',gender:1,type:1,phone:'137****9012'},
+      {id:4,name:'赵六',gender:0,type:1,phone:'136****3456'},
+      {id:5,name:'孙七',gender:1,type:0,phone:'135****7890'},
+      {id:6,name:'钱八',gender:1,type:1,phone:'133****2468'},
+      {id:7,name:'吴九',gender:0,type:0,phone:'188****1111'},
+      {id:8,name:'郑十',gender:1,type:1,phone:'187****2222'},
+      {id:9,name:'周十一',gender:0,type:0,phone:''}
+    ],
+    checkins:[
+      {id:1,roomId:2,guestIds:[3,5],inDate:'2026-09-28',expectOut:'2026-10-03',outDate:null,isCheckout:false,operator:ADMIN_NAME},
+      {id:2,roomId:5,guestIds:[6],inDate:'2026-09-26',expectOut:'2026-10-05',outDate:null,isCheckout:false,operator:ADMIN_NAME},
+      {id:3,roomId:7,guestIds:[8],inDate:'2026-09-18',expectOut:'2026-09-22',outDate:'2026-09-22',isCheckout:true,operator:ADMIN_NAME}
+    ]
+  };
+}
+
+/* ================= 工具 ================= */
+const $=s=>document.querySelector(s);
+const nid=arr=>arr.reduce((m,x)=>Math.max(m,x.id),0)+1;
+const building=id=>db.buildings.find(b=>b.id===id);
+const rtype=id=>db.roomTypes.find(t=>t.id===id);
+const room=id=>db.rooms.find(r=>r.id===id);
+const guest=id=>db.guests.find(g=>g.id===id);
+const liveRooms=()=>db.rooms.filter(r=>!r.delFlag);                    // 逻辑删除：仅正常房间可见
+const buildingRooms=id=>db.rooms.filter(r=>r.buildingId===id&&!r.delFlag);
+const typeRooms=id=>db.rooms.filter(r=>r.typeId===id&&!r.delFlag);
+const roomBeds=r=>{const t=rtype(r.typeId);return (t?t.bedCount:0)+(r.extraBeds||0)};  // 可用床位 = 房型基准床位 + 加床
+const tNameOf=r=>{const t=rtype(r.typeId);return t?t.name:'—'};        // 房型名（容错，防止房型已删）
+const activeCheckin=roomId=>db.checkins.find(c=>c.roomId===roomId&&!c.isCheckout);
+const occupants=r=>{const c=activeCheckin(r.id);return c?c.guestIds.length:0};
+const guestsOfCheckin=c=>c.guestIds.map(guest).filter(Boolean);
+const guestInStay=id=>db.checkins.some(c=>!c.isCheckout&&c.guestIds.includes(id));
+const stayOf=id=>db.checkins.find(c=>!c.isCheckout&&c.guestIds.includes(id));   // 住客当前所在的入住记录
+const guestReferenced=id=>db.checkins.some(c=>c.guestIds.includes(id));
+const roomLabel=r=>{const b=building(r.buildingId);return (b?b.name:'')+r.roomNo};
+const datePlus=(dstr,n)=>{const d=new Date(dstr+'T00:00:00');d.setDate(d.getDate()+n);
+  const p=x=>(''+x).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())};
+const RS=v=>({0:['空闲','tg-blue'],1:['已入住','tg-orange'],2:['维修中','tg-gray']})[v];   // 房间状态
+const CS=v=>v===1?['待清扫','tg-red']:['已清扫','tg-green'];                              // 清扫状态
+const GD=v=>v===1?'男':'女';
+const GT=t=>t===1?['出家人','tg-gold']:['在家人','tg-blue'];
+const avt=g=>`<span class="avt ${g.type===1?'m':''}">${g.name[0]}</span>`;
+const sexTag=g=>`<span class="tag ${g.gender===1?'tg-male':'tg-female'}">${GD(g.gender)}</span>`;
+const attrTags=g=>sexTag(g)+`<span class="tag ${GT(g.type)[1]}">${GT(g.type)[0]}</span>`;
+const guestChip=g=>`<span class="gchip">${g.name} <span class="tag ${g.gender===1?'tg-male':'tg-female'}">${GD(g.gender)}</span><span class="tag ${GT(g.type)[1]}">${GT(g.type)[0]}</span></span>`;
+function mixWarn(ids){                       // 男女混住 / 身份混住提示
+  const list=ids.map(guest).filter(Boolean);
+  if(list.length<2)return '';
+  const out=[];
+  const males=list.filter(g=>g.gender===1).length;
+  if(males&&males<list.length)out.push('⚠ 本房间男女混住，请确认');
+  const monk=list.filter(g=>g.type===1).length;
+  if(monk&&monk<list.length)out.push('⚠ 本房间出家人与在家人混住，请确认');
+  return out.map(t=>`<div class="mixhint">${t}</div>`).join('');
+}
+const MSTATUS={                                  // 手机端房间状态筛选（dirty 取清扫状态）
+  all:{t:'全部状态',ok:()=>true},
+  free:{t:'空闲',ok:r=>r.status===0},
+  live:{t:'已入住',ok:r=>r.status===1},
+  repair:{t:'维修中',ok:r=>r.status===2},
+  dirty:{t:'待清扫',ok:r=>r.needClean===1&&r.status!==2}
+};
+function chipBar(defs,val,act){
+  return '<div class="chips">'+defs.map(d=>
+    `<button class="chip ${d.v===val?'on':''}" data-act="${act}" data-v="${d.v}">${d.t}</button>`).join('')+'</div>';
+}
+const MGENDER={                                  // 手机端住客性别筛选
+  all:{t:'全部性别',ok:()=>true},
+  male:{t:'男',ok:g=>g.gender===1},
+  female:{t:'女',ok:g=>g.gender===0}
+};
+const MTYPE={                                    // 手机端住客身份筛选
+  all:{t:'全部身份',ok:()=>true},
+  lay:{t:'在家人',ok:g=>g.type===0},
+  monk:{t:'出家人',ok:g=>g.type===1}
+};
+const MSTAY={                                    // 手机端住客在住筛选
+  all:{t:'全部状态',ok:()=>true},
+  in:{t:'在住',ok:g=>guestInStay(g.id)},
+  out:{t:'未在住',ok:g=>!guestInStay(g.id)}
+};
+function stayTag(g){                             // 在住标签（含所在房间）
+  const c=stayOf(g.id);
+  if(!c)return '<span class="tag tg-gray">未在住</span>';
+  const r=room(c.roomId);
+  return `<span class="tag tg-green">在住 ${r?roomLabel(r):'房间已删除'}</span>`;
+}
+function recordsQuery(){                     // 入住记录查询：入住人 / 楼栋 / 房间 / 入住日期区间
+  const kw=(fRecords.guest||'').trim();
+  return db.checkins.filter(c=>{
+    const r=room(c.roomId);
+    if(fRecords.buildingId&&(!r||r.buildingId!==fRecords.buildingId))return false;   // 房间缺失不再丢弃记录
+    if(fRecords.roomId&&c.roomId!==fRecords.roomId)return false;
+    if(fRecords.from&&c.inDate<fRecords.from)return false;
+    if(fRecords.to&&c.inDate>fRecords.to)return false;
+    if(kw&&!guestsOfCheckin(c).some(g=>g.name.includes(kw)||(g.phone||'').includes(kw)))return false;
+    return true;
+  }).sort((a,b)=>a.inDate===b.inDate?b.id-a.id:(a.inDate<b.inDate?1:-1));
+}
+function assignableRoom(id){                 // 分配前置校验：仅「空闲」房间可分配住客
+  const r=room(+id);
+  if(!r){toast('房间不存在');return null}
+  if(r.status===2){toast(`${roomLabel(r)} 维修中，不可分配`);return null}
+  if(r.status===1){toast(`${roomLabel(r)} 已有人入住，不可重复分配；如需加人请使用「追加住客」`);return null}
+  return r;
+}
+function pager(total){
+  return `<div class="pager">
+    <span>共 ${total} 条</span>
+    <button class="pgbtn" disabled>‹</button>
+    <button class="pgbtn on">1</button>
+    <button class="pgbtn" disabled>›</button>
+    <select class="pgsize"><option>10 条/页</option><option>20 条/页</option><option>50 条/页</option></select>
+  </div>`;
+}
+
+/* ================= 状态 ================= */
+let mode='mobile';                               // 'pc' | 'mobile'
+const modalEl=document.getElementById('modals');
+const pcModalEl=document.getElementById('pcModals');
+let pendingConfirm=null;
+/* PC 状态 */
+let pcPage='b-buildings';
+let pcRenderedPage=null;                         // 上一次 PC 渲染的页面，用于判断同页刷新
+const pcOpen={'客房管理':true,'住宿管理':true};
+let fBuildings={name:''}, fRoomTypes={name:''}, fRooms={buildingId:0,typeId:0,status:-1},
+    fGuests={name:'',gender:-1,type:-1,stay:-1}, fStay={buildingId:0}, aFilter={buildingId:0,typeId:0},
+    fRecords={guest:'',buildingId:0,roomId:0,from:'',to:''};
+/* 手机端状态 */
+let curId='home', mRoomFilter=0, mStatusFilter='all', mGuestGender='all', mGuestType='all', mGuestStay='all';
+const stack=[];
+/* 分配状态（两端共用） */
+let assign={roomId:null,guestIds:[],search:''};
+/* 弹层表单暂存 */
+let reForm=null, bForm=null, tForm=null, ng={name:'',gender:1,type:0,phone:'',editId:null}, addSel=null;
+let curRoom=null;
+
+/* ================= 弹层 / 提示 ================= */
+function toast(msg){
+  const r=mode==='pc'?document.getElementById('pcToast'):document.getElementById('toastRoot');
+  r.innerHTML=`<div class="toast">${msg}</div>`;
+  clearTimeout(toast._t);toast._t=setTimeout(()=>r.innerHTML='',1900);
+}
+function openModal(title,body,size){
+  const root=mode==='pc'?pcModalEl:modalEl;
+  const head=mode==='pc'
+    ? `<div class="m-head">${title}<button class="shx" data-act="closeSheet">✕</button></div>`
+    : `<div class="sheet-t">${title}<button class="shx" data-act="closeSheet">✕</button></div>`;
+  const box=mode==='pc'
+    ? `<div class="pcdialog ${size||''}">${head}<div class="m-body">${body}</div></div>`
+    : `<div class="sheet">${head}<div class="m-body">${body}</div></div>`;
+  root.innerHTML=`<div class="mask" data-act="closeSheet"></div>`+box;
+  root.classList.add('show');
+}
+function closeSheet(){[modalEl,pcModalEl].forEach(r=>{r.classList.remove('show');r.innerHTML=''})}
+function confirmModal(title,desc,okText,cb,danger){
+  pendingConfirm=cb;
+  openModal(title,
+    `<div class="confirm-desc">${desc}</div>
+     <div class="btn-row" style="margin-top:16px">
+       <button class="btn btn-ghost" data-act="closeSheet">取消</button>
+       <button class="btn ${danger?'btn-danger-solid':'btn-primary'}" data-act="confirmOk">${okText}</button>
+     </div>`,'sm');
+}
+function refresh(){ if(mode==='pc')renderPC(); else rerender(); }
+
+/* ================= 模式切换 ================= */
+function setMode(m){
+  mode=m;
+  document.getElementById('pcShell').classList.toggle('hide',m!=='pc');
+  document.getElementById('phone').classList.toggle('hide',m!=='mobile');
+  const seg=document.getElementById('modeSeg').children;
+  seg[0].classList.toggle('on',m==='pc');
+  seg[1].classList.toggle('on',m==='mobile');
+  closeSheet();
+  if(m==='pc')renderPC(); else rerender();
+}
+
+/* ================= PC 渲染 ================= */
+const PC_MENU=[
+  {group:'客房管理',items:[['b-buildings','楼栋管理'],['b-roomTypes','房型管理'],['b-rooms','房间管理'],['b-guests','住客管理']]},
+  {group:'住宿管理',items:[['b-assign','房间分配'],['b-stay','在住概览'],['b-records','入住记录查询']]}
+];
+const PC_PAGES={
+  'b-buildings':{group:'客房管理',title:'楼栋管理'},
+  'b-roomTypes':{group:'客房管理',title:'房型管理'},
+  'b-rooms':{group:'客房管理',title:'房间管理'},
+  'b-guests':{group:'客房管理',title:'住客管理'},
+  'b-assign':{group:'住宿管理',title:'房间分配'},
+  'b-stay':{group:'住宿管理',title:'在住概览'},
+  'b-records':{group:'住宿管理',title:'入住记录查询'}
+};
+function sideHTML(){
+  return PC_MENU.map(g=>{
+    const open=pcOpen[g.group]!==false;
+    return `<div class="mgroup">
+      <div class="mgroup-h" data-act="toggleGroup" data-g="${g.group}">
+        <span>${g.group}</span><span class="marrow">${open?'▾':'▸'}</span>
+      </div>
+      ${open?`<div class="mgroup-b">${g.items.map(it=>
+        `<div class="mitem ${pcPage===it[0]?'on':''}" data-act="pcGo" data-id="${it[0]}"><span class="mdot"></span>${it[1]}</div>`
+      ).join('')}</div>`:''}
+    </div>`;
+  }).join('');
+}
+function crumbHTML(){
+  const m=PC_PAGES[pcPage];
+  return `<span>首页</span><span class="c-sep">/</span><span>${m.group}</span><span class="c-sep">/</span><span class="c-cur">${m.title}</span>`;
+}
+function pcScrollSnapshot(){                     // PC 滚动位置快照：页面容器 + 分配页各列
+  const s=[];
+  const c=document.getElementById('pcContent');
+  if(c)s.push(['#pcContent',c.scrollTop]);
+  document.querySelectorAll('#pcContent .acol-b').forEach(function(el,i){ s.push(['.acol-b:'+i,el.scrollTop]) });
+  return s;
+}
+function pcScrollRestore(snap){
+  snap.forEach(function(kv){
+    if(!kv[1])return;
+    const el=kv[0]==='#pcContent'?document.getElementById('pcContent')
+      :document.querySelectorAll('#pcContent .acol-b')[+kv[0].split(':')[1]];
+    if(el)el.scrollTop=kv[1];
+  });
+}
+function renderPC(){
+  const same=(pcRenderedPage===pcPage);          // 同页刷新（勾选住客/选房间）而非切换页面
+  const snap=same?pcScrollSnapshot():[];
+  document.getElementById('pcSide').innerHTML=sideHTML();
+  document.getElementById('pcCrumb').innerHTML=crumbHTML();
+  document.getElementById('pcContent').innerHTML=PC_RENDER[pcPage]();
+  pcRenderedPage=pcPage;
+  if(snap.length)pcScrollRestore(snap);
+}
+const PC_RENDER={};
+
+PC_RENDER['b-buildings']=()=>{
+  const kw=fBuildings.name.trim();
+  const list=db.buildings.filter(b=>!kw||b.name.includes(kw));
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>楼栋名称</label><input data-change="fbName" value="${fBuildings.name}" placeholder="请输入楼栋名称"></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="buildings">重置</button>
+    </div>
+    <div style="margin-left:auto"><button class="btn btn-sm btn-primary" data-act="openAddBuilding">＋ 新增</button></div>
+  </div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>楼栋名称</th><th>房间数</th><th>备注</th><th style="width:150px">操作</th></tr></thead>
+      <tbody>${list.length?list.map(b=>`<tr>
+        <td><b>${b.name}</b></td>
+        <td>${buildingRooms(b.id).length}</td>
+        <td>${b.remark||'—'}</td>
+        <td><div class="ops">
+          <button class="btn btn-sm btn-ghost" data-act="openEditBuilding" data-id="${b.id}">编辑</button>
+          <button class="btn btn-sm btn-danger" data-act="delBuildingAsk" data-id="${b.id}">删除</button>
+        </div></td></tr>`).join(''):`<tr><td colspan="4" class="emptytd">暂无数据</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(list.length)}`;
+};
+
+PC_RENDER['b-roomTypes']=()=>{
+  const kw=fRoomTypes.name.trim();
+  const list=db.roomTypes.filter(t=>!kw||t.name.includes(kw));
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>房型名称</label><input data-change="ftName" value="${fRoomTypes.name}" placeholder="请输入房型名称"></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="roomTypes">重置</button>
+    </div>
+    <div style="margin-left:auto"><button class="btn btn-sm btn-primary" data-act="openAddRoomType">＋ 新增</button></div>
+  </div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>房型名称</th><th>基准床位</th><th>占用房间数</th><th>备注</th><th style="width:150px">操作</th></tr></thead>
+      <tbody>${list.length?list.map(t=>`<tr>
+        <td><b>${t.name}</b></td>
+        <td>${t.bedCount} 床</td>
+        <td>${typeRooms(t.id).length}</td>
+        <td>${t.remark||'—'}</td>
+        <td><div class="ops">
+          <button class="btn btn-sm btn-ghost" data-act="openEditRoomType" data-id="${t.id}">编辑</button>
+          <button class="btn btn-sm btn-danger" data-act="delRoomTypeAsk" data-id="${t.id}">删除</button>
+        </div></td></tr>`).join(''):`<tr><td colspan="5" class="emptytd">暂无数据</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(list.length)}`;
+};
+
+PC_RENDER['b-rooms']=()=>{
+  const list=liveRooms()
+    .filter(r=>!fRooms.buildingId||r.buildingId===fRooms.buildingId)
+    .filter(r=>!fRooms.typeId||r.typeId===fRooms.typeId)
+    .filter(r=>fRooms.status<0||r.status===fRooms.status);
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>所属楼栋</label><select data-change="frBuilding">
+      <option value="0" ${fRooms.buildingId===0?'selected':''}>全部</option>
+      ${db.buildings.map(b=>`<option value="${b.id}" ${fRooms.buildingId===b.id?'selected':''}>${b.name}</option>`).join('')}
+    </select></div>
+    <div class="qfield"><label>房型</label><select data-change="frType">
+      <option value="0" ${fRooms.typeId===0?'selected':''}>全部</option>
+      ${db.roomTypes.map(t=>`<option value="${t.id}" ${fRooms.typeId===t.id?'selected':''}>${t.name}</option>`).join('')}
+    </select></div>
+    <div class="qfield"><label>房间状态</label><select data-change="frStatus">
+      <option value="-1" ${fRooms.status===-1?'selected':''}>全部</option>
+      <option value="0" ${fRooms.status===0?'selected':''}>空闲</option>
+      <option value="1" ${fRooms.status===1?'selected':''}>已入住</option>
+      <option value="2" ${fRooms.status===2?'selected':''}>维修中</option>
+    </select></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="rooms">重置</button>
+    </div>
+    <div style="margin-left:auto"><button class="btn btn-sm btn-primary" data-act="openAddRoom">＋ 新增房间</button></div>
+  </div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>楼栋</th><th>房间号</th><th>房型</th><th>可用床位</th><th>状态</th><th>清扫状态</th><th>在住人数</th><th style="width:400px">操作</th></tr></thead>
+      <tbody>${list.length?list.map(r=>{
+        const st=RS(r.status),cs=CS(r.needClean);
+        return `<tr>
+          <td>${building(r.buildingId).name}</td>
+          <td><b>${r.roomNo}</b>${r.extraBeds?' <span class="tag tg-gold">已加床</span>':''}</td>
+          <td>${tNameOf(r)}</td>
+          <td>${roomBeds(r)} 床</td>
+          <td><span class="tag ${st[1]}">${st[0]}</span></td>
+          <td><span class="tag ${cs[1]}">${cs[0]}</span></td>
+          <td>${occupants(r)} 人</td>
+          <td><div class="ops">
+            <button class="btn btn-sm btn-primary" data-act="pcAssignRoom" data-id="${r.id}" ${r.status===0?'':'disabled title="仅空闲房间可分配"'}>分配住客</button>
+            ${r.status===1?`<button class="btn btn-sm btn-primary" data-act="pcAddGuestToRoom" data-id="${r.id}">追加住客</button>`:''}
+            <button class="btn btn-sm btn-ghost" data-act="openRoomEdit" data-id="${r.id}">编辑</button>
+            <button class="btn btn-sm btn-ghost" data-act="pcAddBed" data-id="${r.id}">加床</button>
+            ${r.needClean&&r.status!==2?`<button class="btn btn-sm btn-gold" data-act="markClean" data-id="${r.id}">标记清扫</button>`:''}
+            <button class="btn btn-sm btn-danger" data-act="delRoomAsk" data-id="${r.id}">删除</button>
+          </div></td></tr>`;}).join(''):`<tr><td colspan="8" class="emptytd">暂无数据</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(list.length)}`;
+};
+
+PC_RENDER['b-guests']=()=>{
+  const kw=fGuests.name.trim();
+  const list=db.guests
+    .filter(g=>!kw||g.name.includes(kw)||(g.phone||'').includes(kw))
+    .filter(g=>fGuests.gender<0||g.gender===fGuests.gender)
+    .filter(g=>fGuests.type<0||g.type===fGuests.type)
+    .filter(g=>fGuests.stay<0||(fGuests.stay===1)===guestInStay(g.id));
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>姓名</label><input data-change="fgName" value="${fGuests.name}" placeholder="请输入姓名"></div>
+    <div class="qfield"><label>性别</label><select data-change="fgGender">
+      <option value="-1" ${fGuests.gender===-1?'selected':''}>全部</option>
+      <option value="1" ${fGuests.gender===1?'selected':''}>男</option>
+      <option value="0" ${fGuests.gender===0?'selected':''}>女</option>
+    </select></div>
+    <div class="qfield"><label>身份</label><select data-change="fgType">
+      <option value="-1" ${fGuests.type===-1?'selected':''}>全部</option>
+      <option value="0" ${fGuests.type===0?'selected':''}>在家人</option>
+      <option value="1" ${fGuests.type===1?'selected':''}>出家人</option>
+    </select></div>
+    <div class="qfield"><label>在住状态</label><select data-change="fgStay">
+      <option value="-1" ${fGuests.stay===-1?'selected':''}>全部</option>
+      <option value="1" ${fGuests.stay===1?'selected':''}>在住</option>
+      <option value="0" ${fGuests.stay===0?'selected':''}>未在住</option>
+    </select></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="guests">重置</button>
+    </div>
+    <div style="margin-left:auto"><button class="btn btn-sm btn-primary" data-act="openAddGuest" data-ctx="list">＋ 新增住客</button></div>
+  </div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>姓名</th><th>性别</th><th>身份</th><th>手机号</th><th>在住状态 / 房间</th><th style="width:150px">操作</th></tr></thead>
+      <tbody>${list.length?list.map(g=>`<tr>
+        <td><b>${g.name}</b></td>
+        <td><span class="tag ${g.gender===1?'tg-male':'tg-female'}">${GD(g.gender)}</span></td>
+        <td><span class="tag ${GT(g.type)[1]}">${GT(g.type)[0]}</span></td>
+        <td>${g.phone||'—'}</td>
+        <td>${stayTag(g)}</td>
+        <td><div class="ops">
+          <button class="btn btn-sm btn-ghost" data-act="openEditGuest" data-id="${g.id}">编辑</button>
+          <button class="btn btn-sm btn-danger" data-act="delGuestAsk" data-id="${g.id}">删除</button>
+        </div></td></tr>`).join(''):`<tr><td colspan="6" class="emptytd">暂无数据</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(list.length)}`;
+};
+
+PC_RENDER['b-assign']=()=>{
+  const list=liveRooms()
+    .filter(r=>!aFilter.buildingId||r.buildingId===aFilter.buildingId)
+    .filter(r=>!aFilter.typeId||r.typeId===aFilter.typeId);
+  const picked=assign.roomId?room(assign.roomId):null;
+  const chosen=(picked&&picked.status===0)?picked:null;   // 仅空闲房间才算有效选择
+  const beds=chosen?roomBeds(chosen):0;
+  const n=assign.guestIds.length;
+  const over=!!chosen&&n>beds;
+  return `<div class="assign-root">
+    <div class="assign-cols">
+      <div class="acol">
+        <div class="acol-h"><span>1 选择房间</span><span class="sub">共 ${list.length} 间 · 仅空闲可选</span></div>
+        <div class="acol-f">
+          <select data-change="afBuilding" style="flex:1;height:32px;border:1px solid #DCDFE6;border-radius:5px;padding:0 8px;font-size:13px;font-family:inherit">
+            <option value="0" ${aFilter.buildingId===0?'selected':''}>全部楼栋</option>
+            ${db.buildings.map(b=>`<option value="${b.id}" ${aFilter.buildingId===b.id?'selected':''}>${b.name}</option>`).join('')}
+          </select>
+          <select data-change="afType" style="flex:1;height:32px;border:1px solid #DCDFE6;border-radius:5px;padding:0 8px;font-size:13px;font-family:inherit">
+            <option value="0" ${aFilter.typeId===0?'selected':''}>全部房型</option>
+            ${db.roomTypes.map(t=>`<option value="${t.id}" ${aFilter.typeId===t.id?'selected':''}>${t.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="acol-b">${list.map(r=>{
+          const on=!!chosen&&chosen.id===r.id;
+          const dis=r.status!==0;
+          return `<div class="rcard ${on?'on':''} ${dis?'dis':''}" ${dis?'':`data-act="pickAssignRoom" data-id="${r.id}"`}>
+            <div class="grow">
+              <b style="font-size:14px">${building(r.buildingId).name} ${r.roomNo}</b>
+              <div class="sub" style="margin-top:2px">${tNameOf(r)} · 可用 ${roomBeds(r)} 床</div>
+              <div class="rtags">
+                <span class="tag ${RS(r.status)[1]}">${RS(r.status)[0]}</span>
+                ${r.status===2?'<span class="tag tg-gray">维修中，不可选</span>':''}
+                ${r.status===1?'<span class="tag tg-orange">已入住，不可选</span>':''}
+                ${r.extraBeds?'<span class="tag tg-gold">已加床</span>':''}
+                ${r.needClean&&r.status!==2?'<span class="tag tg-red">待清扫</span>':''}
+              </div>
+            </div>
+            <div class="radio"></div>
+          </div>`;}).join('')||'<div class="empty">无匹配房间</div>'}</div>
+      </div>
+      <div class="acol">
+        <div class="acol-h"><span>2 选择住客</span><span class="sub">已选 ${n} 人</span></div>
+        <div class="acol-f">
+          <input data-input="assignSearch" value="${assign.search}" placeholder="搜索姓名 / 手机号"
+            style="flex:1;height:32px;border:1px solid #DCDFE6;border-radius:5px;padding:0 10px;font-size:13px;font-family:inherit;outline:none">
+          <button class="btn btn-sm btn-primary" data-act="openAddGuest" data-ctx="assign" style="flex:none">＋ 新增住客</button>
+        </div>
+        <div class="acol-b" id="assignGuests">${guestPickRows()}</div>
+      </div>
+    </div>
+    ${chosen?mixWarn(assign.guestIds):''}
+    ${picked&&!chosen?`<div class="mixhint" style="background:#FDF3F5;border-color:#F3C4CC;color:var(--red)">${roomLabel(picked)} 当前为「${RS(picked.status)[0]}」，不可分配，请改选空闲房间；如需给该房间加人请使用「追加住客」。</div>`:''}
+    <div class="assign-bar">
+      <div class="bedprog ${over?'over':''}" style="margin:0">
+        ${chosen?`已选 <b>${n}</b> 人 / 可用 <b>${beds}</b> 床${over?' <span style="color:var(--red)">超出可用床位</span>':''}`
+                :`<span>请先在左侧选择房间</span>`}
+      </div>
+      <div class="grow"></div>
+      ${over?`<button class="btn btn-gold" data-act="assignBed">＋ 加床（+1 床）</button>`:''}
+      <button class="btn ${over?'btn-danger-solid':'btn-primary'}" data-act="confirmAssign" ${(!chosen||!n||over)?'disabled':''}>确认分配（即入住）</button>
+    </div>
+  </div>`;
+};
+
+PC_RENDER['b-stay']=()=>{
+  const bf=fStay.buildingId;
+  const active=db.checkins.filter(c=>!c.isCheckout)
+    .filter(c=>!bf||room(c.roomId).buildingId===bf)
+    .sort((a,b)=>b.id-a.id);
+  const history=db.checkins.filter(c=>c.isCheckout)
+    .filter(c=>!bf||room(c.roomId).buildingId===bf)
+    .sort((a,b)=>b.id-a.id);
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>楼栋</label><select data-change="fsBuilding">
+      <option value="0" ${bf===0?'selected':''}>全部</option>
+      ${db.buildings.map(b=>`<option value="${b.id}" ${bf===b.id?'selected':''}>${b.name}</option>`).join('')}
+    </select></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="stay">重置</button>
+    </div>
+  </div>
+  <div class="toolbar"><div class="sec-t" style="margin:0">在住概览 <span class="more">共 ${active.length} 间</span></div></div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>楼栋/房间号</th><th>房型</th><th>在住住客</th><th>入住时间</th><th>预计退房</th><th>备注</th><th style="width:330px">操作</th></tr></thead>
+      <tbody>${active.length?active.map(c=>{
+        const r=room(c.roomId);
+        return `<tr>
+          <td><b>${roomLabel(r)}</b>${r.extraBeds?' <span class="tag tg-gold">已加床</span>':''}</td>
+          <td>${tNameOf(r)} · ${roomBeds(r)} 床</td>
+          <td><div class="gchips" style="margin:0">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div></td>
+          <td>${c.inDate}</td>
+          <td>${c.expectOut||'—'}</td>
+          <td>${c.remark?`<span class="sub">${c.remark}</span>`:'—'}</td>
+          <td><div class="ops">
+            <button class="btn btn-sm btn-primary" data-act="pcAddGuestToRoom" data-id="${r.id}">追加住客</button>
+            <button class="btn btn-sm btn-danger" data-act="checkoutAsk" data-cid="${c.id}">办理退房</button>
+            ${r.needClean?'<button class="btn btn-sm btn-gold" data-act="markClean" data-id="'+r.id+'">标记已清扫</button>':''}
+          </div></td></tr>`;}).join(''):`<tr><td colspan="7" class="emptytd">暂无在住记录</td></tr>`}
+      </tbody>
+    </table>
+  </div>
+  <div class="toolbar" style="margin-top:22px"><div class="sec-t" style="margin:0">历史入住记录 <span class="more">共 ${history.length} 条</span></div></div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>房间</th><th>住客</th><th>入住 ~ 退房</th><th>备注</th><th>操作人</th></tr></thead>
+      <tbody>${history.length?history.map(c=>{
+        const r=room(c.roomId);
+        return `<tr>
+          <td><b>${roomLabel(r)}</b></td>
+          <td><div class="gchips" style="margin:0">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div></td>
+          <td>${c.inDate} ~ ${c.outDate||'—'}</td>
+          <td>${c.remark?`<span class="sub">${c.remark}</span>`:'—'}</td>
+          <td>${c.operator||'—'}</td></tr>`;}).join(''):`<tr><td colspan="5" class="emptytd">暂无历史记录</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(active.length+history.length)}`;
+};
+
+PC_RENDER['b-records']=()=>{
+  const list=recordsQuery();
+  const roomOpts=liveRooms().filter(r=>!fRecords.buildingId||r.buildingId===fRecords.buildingId);
+  return `
+  <div class="qbar">
+    <div class="qfield"><label>入住人</label><input data-change="recGuest" value="${fRecords.guest}" placeholder="姓名或手机号"></div>
+    <div class="qfield"><label>楼栋</label><select data-change="recBld">
+      <option value="0" ${fRecords.buildingId===0?'selected':''}>全部</option>
+      ${db.buildings.map(b=>`<option value="${b.id}" ${fRecords.buildingId===b.id?'selected':''}>${b.name}</option>`).join('')}
+    </select></div>
+    <div class="qfield"><label>房间</label><select data-change="recRoom">
+      <option value="0" ${fRecords.roomId===0?'selected':''}>全部</option>
+      ${roomOpts.map(r=>`<option value="${r.id}" ${fRecords.roomId===r.id?'selected':''}>${roomLabel(r)}</option>`).join('')}
+    </select></div>
+    <div class="qfield"><label>入住日期起</label><input type="date" data-change="recFrom" value="${fRecords.from}"></div>
+    <div class="qfield"><label>入住日期止</label><input type="date" data-change="recTo" value="${fRecords.to}"></div>
+    <div class="qbtns">
+      <button class="btn btn-sm btn-primary" data-act="pcSearch">搜索</button>
+      <button class="btn btn-sm btn-ghost" data-act="pcReset" data-t="records">重置</button>
+    </div>
+  </div>
+  <div class="toolbar"><div class="sec-t" style="margin:0">入住记录 <span class="more">共 ${list.length} 条</span></div></div>
+  <div class="tablewrap">
+    <table class="rtable">
+      <thead><tr><th>房间</th><th>房型</th><th>入住人</th><th>入住时间</th><th>退房时间</th><th>状态</th><th>备注</th><th>操作人</th></tr></thead>
+      <tbody>${list.length?list.map(c=>{
+        const r=room(c.roomId);
+        return `<tr>
+          <td><b>${roomLabel(r)}</b></td>
+          <td>${tNameOf(r)}</td>
+          <td><div class="gchips" style="margin:0">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div></td>
+          <td>${c.inDate}</td>
+          <td>${c.outDate||'—'}</td>
+          <td><span class="tag ${c.isCheckout?'tg-gray':'tg-green'}">${c.isCheckout?'已退房':'在住'}</span></td>
+          <td>${c.remark?`<span class="sub">${c.remark}</span>`:'—'}</td>
+          <td>${c.operator||'—'}</td></tr>`;}).join(''):`<tr><td colspan="8" class="emptytd">无匹配记录</td></tr>`}
+      </tbody>
+    </table>
+  </div>${pager(list.length)}`;
+};
+
+/* ================= 手机端渲染 ================= */
+const SCREENS={
+  'home':{title:'客堂客房管理',tab:'m'},
+  'rooms':{title:'房间',tab:'m'},
+  'room-detail':{title:'房间详情'},
+  'guests':{title:'住客',tab:'m'},
+  'manage':{title:'管理',tab:'m'},
+  'buildings':{title:'楼栋管理'},
+  'roomTypes':{title:'房型管理'},
+  'assign':{title:'分配住客'},
+  'stay':{title:'在住概览'},
+  'records':{title:'入住记录查询'}
+};
+const RENDER={};
+function show(id){
+  const prev=document.querySelector('#screenwrap .screen');
+  const same=(id===curId);                                   // 同页刷新（如勾选住客）而非页面跳转
+  const keep=(same&&prev)?prev.scrollTop:0;                  // 同页刷新时保留滚动位置
+  curId=id;
+  const meta=SCREENS[id];
+  document.getElementById('navTitle').textContent=meta?meta.title:'';
+  document.getElementById('navBack').style.visibility=stack.length?'visible':'hidden';
+  document.getElementById('screenwrap').innerHTML=`<section class="screen${same?' noanim':''}">${RENDER[id]()}</section>`;
+  renderTabbar();
+  if(keep){const now=document.querySelector('#screenwrap .screen');if(now)now.scrollTop=keep}
+}
+function go(id){stack.push(curId);show(id)}
+function back(){if(stack.length)show(stack.pop())}
+function tabTo(id){stack.length=0;show(id)}
+function rerender(){show(curId)}
+
+const ICONS={
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="5.5" y="3.5" width="13" height="17" rx="2"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.4"/><path d="M5.2 19.8c1.5-3.3 4-4.9 6.8-4.9s5.3 1.6 6.8 4.9"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>'
+};
+const GICO={
+  assign:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3"/><path d="M3.6 19c1.2-3 3.3-4.4 5.9-4.4s4.7 1.4 5.9 4.4"/><path d="M17.5 7.5v6M14.5 10.5h6"/></svg>',
+  stay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M7.5 9.5h9M7.5 13h9M7.5 16.5h5"/></svg>',
+  building:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V5.5A1.5 1.5 0 0 1 7.5 4h9A1.5 1.5 0 0 1 18 5.5V20"/><path d="M4 20h16"/><path d="M9.5 8h1.5M13 8h1.5M9.5 11.5h1.5M13 11.5h1.5M10 20v-3.5h4V20"/></svg>',
+  type:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>',
+  clean:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.5 19.5 10"/><path d="M13 6l5 5-2.2 2.2-5-5z"/><path d="M4 20l6.2-6.2"/></svg>'
+};
+const TABS=[['home','首页','home'],['rooms','房间','door'],['guests','住客','user'],['manage','管理','grid']];
+function renderTabbar(){
+  const bar=document.getElementById('tabbar');
+  const meta=SCREENS[curId];
+  if(!meta||!meta.tab){bar.classList.add('hide');return}
+  bar.classList.remove('hide');
+  bar.innerHTML=TABS.map(t=>
+    `<button class="titem ${curId===t[0]?'on':''}" data-act="tab" data-id="${t[0]}">${ICONS[t[2]]}<span>${t[1]}</span></button>`).join('');
+}
+
+function guestPickRows(){
+  const q=(assign.search||'').trim();
+  const list=db.guests.filter(g=>!q||g.name.includes(q)||(g.phone||'').includes(q));
+  if(!list.length)return '<div class="sub" style="padding:8px 0">未找到匹配的住客</div>';
+  return list.map(g=>{
+    const on=assign.guestIds.includes(g.id);
+    const stay=stayOf(g.id);
+    return `<div class="ckrow ${on?'on':''}" data-act="tgAssignGuest" data-id="${g.id}">
+      <span class="ckbox">${on?'✓':''}</span>${avt(g)}
+      <div class="grow"><b>${g.name}</b> ${attrTags(g)}${stay?`<span class="tag tg-green">在住 ${roomLabel(room(stay.roomId))}</span>`:''}
+      <div class="sub">${g.phone||'未留电话'}</div></div>
+    </div>`;
+  }).join('');
+}
+
+RENDER['home']=()=>{
+  const free=liveRooms().filter(r=>r.status===0).length;
+  const live=liveRooms().filter(r=>r.status===1).length;
+  const repair=liveRooms().filter(r=>r.status===2).length;
+  const dirtyRooms=liveRooms().filter(r=>r.needClean===1&&r.status!==2);
+  return `
+  <div class="hero">
+    <div class="hero-logo"></div>
+    <div class="h-kicker">客堂管理端 · 本地内网</div>
+    <h2>客堂客房管理</h2>
+    <div class="h-sub">今天是 ${TODAY} ｜ ${ADMIN_NAME}</div>
+  </div>
+  <div class="stats">
+    <div class="stat" data-act="statJump" data-st="free"><b>${free}</b><span>空闲</span></div>
+    <div class="stat" data-act="statJump" data-st="live"><b style="color:var(--orange)">${live}</b><span>已入住</span></div>
+    <div class="stat" data-act="statJump" data-st="repair"><b>${repair}</b><span>维修中</span></div>
+    <div class="stat" data-act="statJump" data-st="dirty"><b style="color:${dirtyRooms.length?'var(--red)':'var(--ink)'}">${dirtyRooms.length}</b><span>待清扫</span></div>
+  </div>
+  <div class="grid4">
+    <button class="gitem" data-act="goAssign">${GICO.assign}分配住客</button>
+    <button class="gitem" data-act="go" data-id="stay">${GICO.stay}在住概览</button>
+    <button class="gitem" data-act="go" data-id="buildings">${GICO.building}楼栋管理</button>
+    <button class="gitem" data-act="go" data-id="roomTypes">${GICO.type}房型管理</button>
+  </div>
+  <div class="card qlist">
+    <div class="sec-t">待清扫房间 <span class="more">${dirtyRooms.length} 间</span></div>
+    ${dirtyRooms.length?dirtyRooms.map(r=>`
+      <div class="row" data-act="openRoom" data-id="${r.id}" style="cursor:pointer">
+        <div class="grow"><b>${roomLabel(r)}</b><div class="sub">${tNameOf(r)} · 可用 ${roomBeds(r)} 床</div></div>
+        <button class="btn btn-sm btn-gold" style="flex:none" data-act="markClean" data-id="${r.id}">标记已清扫</button>
+      </div>`).join(''):'<div class="sub">暂无待清扫房间 ✓</div>'}
+  </div>`;
+};
+
+RENDER['rooms']=()=>{
+  const bdefs=[{v:0,t:'全部'},...db.buildings.map(b=>({v:b.id,t:b.name}))];
+  const sdefs=Object.keys(MSTATUS).map(k=>({v:k,t:MSTATUS[k].t}));
+  const list=liveRooms().filter(r=>(!mRoomFilter||r.buildingId===mRoomFilter)&&MSTATUS[mStatusFilter].ok(r));
+  return `<div class="tipbar">点击房间卡片查看详情；点右上角 ✎ 可直接编辑房间信息与床位。</div>`
+    + chipBar(bdefs,mRoomFilter,'mFilter')
+    + chipBar(sdefs,mStatusFilter,'mStatusFilter')
+    + (list.length
+      ? '<div class="rooms">'+list.map(r=>{
+      const st=RS(r.status);
+      return `<div class="roomcard" data-act="openRoom" data-id="${r.id}">
+        <button class="redit" data-act="openRoomEdit" data-id="${r.id}" title="编辑房间">✎</button>
+        <div class="roomno">${building(r.buildingId).name} ${r.roomNo}</div>
+        <div class="sub" style="margin-top:2px">${tNameOf(r)} · 可用 ${roomBeds(r)} 床</div>
+        <div class="rtags">
+          <span class="tag ${st[1]}">${st[0]}</span>
+          ${r.extraBeds?'<span class="tag tg-gold">已加床</span>':''}
+          ${r.needClean&&r.status!==2?'<span class="tag tg-red">待清扫</span>':''}
+        </div>
+      </div>`;}).join('')+'</div>'
+      : `<div class="tipbar" style="text-align:center">${mStatusFilter==='all'?'该楼栋下暂无房间':`「${MSTATUS[mStatusFilter].t}」暂无房间`}</div>`);
+};
+
+RENDER['room-detail']=()=>{
+  const r=room(curRoom);
+  if(!r)return '<div class="empty">房间不存在</div>';
+  const b=building(r.buildingId),t=rtype(r.typeId),st=RS(r.status),cs=CS(r.needClean);
+  const c=activeCheckin(r.id);
+  const beds=roomBeds(r);
+  const curGuests=c?guestsOfCheckin(c):[];
+  const remain=beds-curGuests.length;
+  const history=db.checkins.filter(x=>x.roomId===r.id).sort((x,y)=>y.id-x.id);
+  return `
+  <div class="hero" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1">
+      <div>
+        <div class="h-kicker">${b.name}</div>
+        <h2 style="font-size:24px">${r.roomNo}</h2>
+        <div class="h-sub">${t.name} · 可用 ${beds} 床${r.extraBeds?`（含加床 ${r.extraBeds}）`:''}</div>
+      </div>
+      <div style="text-align:right">
+        <span class="tag" style="background:rgba(255,255,255,.22);color:#fff">${st[0]}</span>
+        ${r.needClean&&r.status!==2?'<div style="margin-top:6px"><span class="tag tg-red">待清扫</span></div>':''}
+        ${r.extraBeds?'<div style="margin-top:6px"><span class="tag tg-gold">已加床</span></div>':''}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-t">房间信息 <button class="btn btn-sm btn-ghost" data-act="openRoomEdit" data-id="${r.id}">✎ 编辑</button></div>
+    <div class="kv"><span>所属楼栋</span><b>${b.name}</b></div>
+    <div class="kv"><span>房间号</span><b>${r.roomNo}</b></div>
+    <div class="kv"><span>房型</span><b>${t.name}（基准 ${t.bedCount} 床）</b></div>
+    <div class="kv"><span>可用床位</span><b>${beds} 床${r.extraBeds?` <span class="tag tg-gold">加床 ${r.extraBeds}</span>`:''}</b></div>
+    <div class="kv"><span>清扫状态</span><b><span class="tag ${cs[1]}">${cs[0]}</span></b></div>
+    ${r.remark?`<div class="kv"><span>备注</span><b>${r.remark}</b></div>`:''}
+  </div>
+  <div class="card">
+    <div class="sec-t">当前住客 ${c?`<span class="tag tg-blue">${curGuests.length}/${beds} 床</span>`:''}</div>
+    ${c?`
+      <div class="gchips" style="margin:0 0 10px">${curGuests.map(g=>guestChip(g)).join('')}</div>
+      <div class="sub">入住 ${c.inDate} ｜ 预计离店 ${c.expectOut||'—'}</div>
+      ${remain>0
+        ?`<button class="btn btn-ghost btn-sm" style="margin-top:10px" data-act="openAddToRoom">＋ 追加住客（余 ${remain} 床）</button>`
+        :`<div class="sub" style="margin-top:8px;color:var(--red)">床位已满（${beds} 床）。</div>
+          <button class="btn btn-gold btn-sm" style="margin-top:8px" data-act="bedThenAdd">＋ 加床后追加住客</button>`}
+    `:'<div class="sub" style="padding:4px 0">（暂无住客）</div>'}
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;gap:10px">
+    <div class="btn-row">
+      ${r.status===0?`<button class="btn btn-primary" data-act="roomAssign" data-id="${r.id}">分配住客</button>`
+        :`<button class="btn btn-primary" disabled>分配住客（非空闲）</button>`}
+      ${r.status===1?`<button class="btn btn-danger" data-act="checkoutAsk" data-id="${r.id}">办理退房</button>`:''}
+    </div>
+    ${r.needClean&&r.status!==2?`<button class="btn btn-gold btn-block" data-act="markClean" data-id="${r.id}">✓ 标记已清扫</button>`:''}
+    ${r.status===2?'<div class="sub" style="text-align:center">房间维修中，暂不可分配住客</div>':''}
+    <button class="btn btn-danger btn-block" data-act="delRoomAsk" data-id="${r.id}">删除房间</button>
+  </div>
+  <div class="card">
+    <div class="sec-t">历史入住记录 <span class="more">${history.length} 条</span></div>
+    ${history.length?history.map(h=>`
+      <div style="border-bottom:1px solid var(--line);padding:9px 0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:13px">${h.inDate} ~ ${h.isCheckout?h.outDate:'至今'}</b>
+          <span class="tag ${h.isCheckout?'tg-gray':'tg-green'}">${h.isCheckout?'已退房':'在住'}</span>
+        </div>
+        <div class="gchips" style="margin-top:6px">${guestsOfCheckin(h).map(g=>guestChip(g)).join('')}</div>
+        <div class="sub" style="margin-top:5px">操作人：${h.operator||'—'}</div>
+        ${h.remark?`<div class="sub" style="margin-top:3px;color:#8A6D00">${h.remark}</div>`:''}
+      </div>`).join(''):'<div class="sub">暂无记录</div>'}
+  </div>`;
+};
+
+RENDER['guests']=()=>{
+  const gdefs=Object.keys(MGENDER).map(k=>({v:k,t:MGENDER[k].t}));
+  const tdefs=Object.keys(MTYPE).map(k=>({v:k,t:MTYPE[k].t}));
+  const sdefs=Object.keys(MSTAY).map(k=>({v:k,t:MSTAY[k].t}));
+  const list=db.guests.filter(g=>MGENDER[mGuestGender].ok(g)&&MTYPE[mGuestType].ok(g)&&MSTAY[mGuestStay].ok(g));
+  return `
+  <div class="tipbar">住客分「在家人 / 出家人」两种身份，性别与身份标签贯穿分配、入住与历史记录。已被入住记录引用的住客不可删除。</div>`
+  + chipBar(gdefs,mGuestGender,'mGuestGender')
+  + chipBar(tdefs,mGuestType,'mGuestType')
+  + chipBar(sdefs,mGuestStay,'mGuestStay')
+  + `<div class="card" style="padding:4px 14px">
+    ${list.length?list.map(g=>`
+      <div class="row">
+        ${avt(g)}
+        <div class="grow"><b>${g.name}</b> ${attrTags(g)}<div class="sub" style="margin-top:5px">${stayTag(g)} ${g.phone||'未留电话'}</div></div>
+        <button class="btn btn-sm btn-ghost" style="flex:none" data-act="openEditGuest" data-id="${g.id}">✎</button>
+        <button class="btn btn-sm btn-danger" style="flex:none" data-act="delGuestAsk" data-id="${g.id}">删除</button>
+      </div>`).join(''):`<div class="empty">「${MGENDER[mGuestGender].t} · ${MTYPE[mGuestType].t} · ${MSTAY[mGuestStay].t}」下暂无住客</div>`}
+  </div>
+  <button class="btn btn-primary btn-block" data-act="openAddGuest" data-ctx="list">＋ 新增住客</button>`;
+};
+
+RENDER['manage']=()=>{
+  return `
+  <div class="tipbar">管理客房基础数据（楼栋 / 房型），并可按条件查询入住记录。</div>
+  <div class="card" data-act="go" data-id="buildings" style="cursor:pointer;display:flex;align-items:center;gap:12px">
+    <span class="avt">${GICO.building}</span>
+    <div class="grow"><b style="font-size:14px">楼栋管理</b><div class="sub">共 ${db.buildings.length} 栋 · 管理楼栋名称与备注</div></div>
+    <span style="color:var(--sub)">›</span>
+  </div>
+  <div class="card" data-act="go" data-id="roomTypes" style="cursor:pointer;display:flex;align-items:center;gap:12px">
+    <span class="avt">${GICO.type}</span>
+    <div class="grow"><b style="font-size:14px">房型管理</b><div class="sub">共 ${db.roomTypes.length} 种 · 定义基准床位</div></div>
+    <span style="color:var(--sub)">›</span>
+  </div>
+  <div class="card" data-act="go" data-id="records" style="cursor:pointer;display:flex;align-items:center;gap:12px">
+    <span class="avt">${GICO.stay}</span>
+    <div class="grow"><b style="font-size:14px">入住记录查询</b><div class="sub">按入住人 / 房间 / 时间组合查询</div></div>
+    <span style="color:var(--sub)">›</span>
+  </div>`;
+};
+
+RENDER['buildings']=()=>{
+  return `
+  <div class="tipbar">楼栋下若仍有房间则不可删除；删除前请先处理其下房间。</div>
+  <div class="card" style="padding:4px 14px">
+    ${db.buildings.length?db.buildings.map(b=>{
+      const n=buildingRooms(b.id).length;
+      return `<div class="row">
+        <span class="avt">楼</span>
+        <div class="grow"><b>${b.name}</b><div class="sub">${n} 个房间${b.remark?' ｜ '+b.remark:''}</div></div>
+        <button class="btn btn-sm btn-ghost" style="flex:none" data-act="openEditBuilding" data-id="${b.id}">✎ 编辑</button>
+        <button class="btn btn-sm btn-danger" style="flex:none" data-act="delBuildingAsk" data-id="${b.id}">删除</button>
+      </div>`;}).join(''):'<div class="empty">暂无楼栋</div>'}
+  </div>
+  <button class="btn btn-primary btn-block" data-act="openAddBuilding">＋ 新增楼栋</button>`;
+};
+
+RENDER['roomTypes']=()=>{
+  return `
+  <div class="tipbar">房型定义基准床位；房间可用床位 = 房型基准床位 + 该房间加床数量。被房间使用的房型不可删除。</div>
+  <div class="card" style="padding:4px 14px">
+    ${db.roomTypes.length?db.roomTypes.map(t=>{
+      const n=typeRooms(t.id).length;
+      return `<div class="row">
+        <span class="avt">型</span>
+        <div class="grow"><b>${t.name}</b><div class="sub">基准 ${t.bedCount} 床 ｜ ${n} 个房间${t.remark?' ｜ '+t.remark:''}</div></div>
+        <button class="btn btn-sm btn-ghost" style="flex:none" data-act="openEditRoomType" data-id="${t.id}">✎ 编辑</button>
+        <button class="btn btn-sm btn-danger" style="flex:none" data-act="delRoomTypeAsk" data-id="${t.id}">删除</button>
+      </div>`;}).join(''):'<div class="empty">暂无房型</div>'}
+  </div>
+  <button class="btn btn-primary btn-block" data-act="openAddRoomType">＋ 新增房型</button>`;
+};
+
+RENDER['assign']=()=>{
+  const picked=assign.roomId?room(assign.roomId):null;
+  const chosen=(picked&&picked.status===0)?picked:null;   // 仅空闲房间才算有效选择
+  const beds=chosen?roomBeds(chosen):0;
+  const n=assign.guestIds.length;
+  const over=!!chosen&&n>beds;
+  return `
+  <div class="tipbar">分配住客即完成入住：确认后自动生成入住记录，房间状态变为「已入住」。已入住房间请改用「追加住客」。</div>
+  <div class="card">
+    <div class="sec-t">1 选择房间 <span class="more">仅空闲可选</span></div>
+    ${liveRooms().map(r=>{
+      const on=!!chosen&&chosen.id===r.id;
+      const dis=r.status!==0;
+      return `<div class="rcard ${on?'on':''} ${dis?'dis':''}" ${dis?'':`data-act="pickAssignRoom" data-id="${r.id}"`}>
+        <div class="grow">
+          <b style="font-size:14px">${building(r.buildingId).name} ${r.roomNo}</b>
+          <span class="sub">${tNameOf(r)} · 可用 ${roomBeds(r)} 床</span>
+          ${r.extraBeds?'<span class="tag tg-gold">已加床</span>':''}
+          ${r.status===2?'<span class="tag tg-gray">维修中，不可选</span>':''}
+          ${r.status===1?'<span class="tag tg-orange">已入住，不可选</span>':''}
+          ${r.needClean&&r.status!==2?'<span class="tag tg-red">待清扫</span>':''}
+        </div>
+        <div class="radio"></div>
+      </div>`;}).join('')}
+  </div>
+  <div class="card">
+    <div class="sec-t">2 选择住客 <span class="more">已选 ${n} 人</span></div>
+    <input data-input="assignSearch" value="${assign.search}" placeholder="搜索姓名 / 手机号"
+      style="width:100%;border:1.5px solid var(--line);border-radius:11px;padding:9px 12px;font-size:13px;background:#FAFBFD;outline:none;font-family:inherit;margin-bottom:6px">
+    <div id="assignGuests">${guestPickRows()}</div>
+    <button class="btn btn-ghost btn-block" style="margin-top:12px" data-act="openAddGuest" data-ctx="assign">＋ 新建住客</button>
+  </div>
+  ${chosen?mixWarn(assign.guestIds):''}
+  ${picked&&!chosen?`<div class="mixhint" style="background:#FDF3F5;border-color:#F3C4CC;color:var(--red)">${roomLabel(picked)} 当前为「${RS(picked.status)[0]}」，不可分配，请改选空闲房间；如需给该房间加人请使用「追加住客」。</div>`:''}
+  <div class="stickbar" style="flex-direction:column;align-items:stretch">
+    <div class="bedprog ${over?'over':''}" style="margin:0 0 8px">
+      ${chosen?`已选 <b>${n}</b> / 可用 <b>${beds}</b> 床${over?' <span style="color:var(--red)">超出可用床位</span>':''}`
+              :'<span>请先选择房间，再勾选住客</span>'}
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      ${over?`<button class="btn btn-gold btn-sm" data-act="assignBed" style="flex:none">＋ 加床</button>`:''}
+      <button class="btn ${over?'btn-danger-solid':'btn-primary'} main" data-act="confirmAssign" ${(!chosen||!n||over)?'disabled':''}>确认分配（${n} 人${chosen?' · '+roomLabel(chosen):''}）</button>
+    </div>
+  </div>`;
+};
+
+RENDER['stay']=()=>{
+  const active=db.checkins.filter(c=>!c.isCheckout).sort((a,b)=>b.id-a.id);
+  const history=db.checkins.filter(c=>c.isCheckout).sort((a,b)=>b.id-a.id);
+  return `
+  <div class="card">
+    <div class="sec-t">在住概览 <span class="more">${active.length} 间</span></div>
+    ${active.length?active.map(c=>{
+      const r=room(c.roomId);
+      return `<div style="border-bottom:1px solid var(--line);padding:10px 0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:14px">${roomLabel(r)}</b>
+          <span class="tag ${RS(r.status)[1]}">${RS(r.status)[0]}</span>
+        </div>
+        <div class="sub" style="margin-top:3px">${tNameOf(r)} · 可用 ${roomBeds(r)} 床</div>
+        <div class="gchips" style="margin-top:6px">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div>
+        <div class="sub" style="margin-top:6px">入住 ${c.inDate} ｜ 预计退房 ${c.expectOut||'—'}</div>
+        ${c.remark?`<div class="sub" style="margin-top:3px;color:#8A6D00">${c.remark}</div>`:''}
+        <div class="btn-row" style="margin-top:9px">
+          <button class="btn btn-sm btn-danger" data-act="checkoutAsk" data-cid="${c.id}">办理退房</button>
+          ${r.needClean?`<button class="btn btn-sm btn-gold" data-act="markClean" data-id="${r.id}">标记已清扫</button>`:''}
+        </div>
+      </div>`;}).join(''):'<div class="sub">暂无在住记录</div>'}
+  </div>
+  <div class="card">
+    <div class="sec-t">历史入住记录 <span class="more">${history.length} 条</span></div>
+    ${history.length?history.map(c=>{
+      const r=room(c.roomId);
+      return `<div class="row">
+        <div class="grow"><b>${roomLabel(r)}</b>
+          <div class="gchips" style="margin-top:5px">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div>
+          <div class="sub" style="margin-top:4px">${c.inDate} ~ ${c.outDate||'—'} ｜ 操作人 ${c.operator||'—'}</div>
+          ${c.remark?`<div class="sub" style="margin-top:3px;color:#8A6D00">${c.remark}</div>`:''}
+        </div>
+      </div>`;}).join(''):'<div class="sub">暂无历史记录</div>'}
+  </div>
+  <button class="btn btn-ghost btn-block" data-act="go" data-id="records" style="margin-top:12px">按条件查询入住记录</button>`;
+};
+
+RENDER['records']=()=>{
+  const list=recordsQuery();
+  const roomOpts=liveRooms().filter(r=>!fRecords.buildingId||r.buildingId===fRecords.buildingId);
+  return `
+  <div class="tipbar">支持按入住人、楼栋 / 房间、入住日期区间组合查询；结果为全部入住记录（含在住与已退房）。</div>
+  <div class="card">
+    <div class="fi"><label>入住人（姓名或手机号）</label><input data-change="recGuest" value="${fRecords.guest}" placeholder="选填"></div>
+    <div class="d2">
+      <div class="fi"><label>入住日期起</label><input type="date" data-change="recFrom" value="${fRecords.from}"></div>
+      <div class="fi"><label>入住日期止</label><input type="date" data-change="recTo" value="${fRecords.to}"></div>
+    </div>
+    <div class="d2">
+      <div class="fi"><label>楼栋</label><select data-change="recBld">
+        <option value="0" ${fRecords.buildingId===0?'selected':''}>全部</option>
+        ${db.buildings.map(b=>`<option value="${b.id}" ${fRecords.buildingId===b.id?'selected':''}>${b.name}</option>`).join('')}
+      </select></div>
+      <div class="fi"><label>房间</label><select data-change="recRoom">
+        <option value="0" ${fRecords.roomId===0?'selected':''}>全部</option>
+        ${roomOpts.map(r=>`<option value="${r.id}" ${fRecords.roomId===r.id?'selected':''}>${roomLabel(r)}</option>`).join('')}
+      </select></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-act="recReset">重置</button>
+      <button class="btn btn-primary" data-act="recSearch">查询</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-t">查询结果 <span class="more">共 ${list.length} 条</span></div>
+    ${list.length?list.map(c=>{
+      const r=room(c.roomId);
+      return `<div style="border-bottom:1px solid var(--line);padding:10px 0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:14px">${roomLabel(r)}</b>
+          <span class="tag ${c.isCheckout?'tg-gray':'tg-green'}">${c.isCheckout?'已退房':'在住'}</span>
+        </div>
+        <div class="sub" style="margin-top:3px">${tNameOf(r)} ｜ ${c.inDate} ~ ${c.isCheckout?(c.outDate||'—'):'至今'}</div>
+        <div class="gchips" style="margin-top:6px">${guestsOfCheckin(c).map(g=>guestChip(g)).join('')}</div>
+        <div class="sub" style="margin-top:5px">操作人 ${c.operator||'—'}${c.remark?` ｜ <span style="color:#8A6D00">${c.remark}</span>`:''}</div>
+      </div>`;}).join(''):'<div class="empty">无匹配记录</div>'}
+  </div>`;
+};
+
+/* ================= 事件委托 ================= */
+const acts={};
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el||el.disabled)return;
+  const fn=acts[el.dataset.act];
+  if(fn)fn(el.dataset,el);
+});
+document.addEventListener('change',e=>{
+  const el=e.target,c=el.dataset.change;
+  if(!c)return;
+  switch(c){
+    case 'fbName':fBuildings.name=el.value;break;
+    case 'ftName':fRoomTypes.name=el.value;break;
+    case 'frBuilding':fRooms.buildingId=+el.value;break;
+    case 'frType':fRooms.typeId=+el.value;break;
+    case 'frStatus':fRooms.status=+el.value;break;
+    case 'fgName':fGuests.name=el.value;break;
+    case 'fgGender':fGuests.gender=+el.value;break;
+    case 'fgType':fGuests.type=+el.value;break;
+    case 'fgStay':fGuests.stay=+el.value;break;
+    case 'fsBuilding':fStay.buildingId=+el.value;break;
+    case 'recGuest':fRecords.guest=el.value;break;
+    case 'recBld':fRecords.buildingId=+el.value;fRecords.roomId=0;refresh();break;
+    case 'recRoom':fRecords.roomId=+el.value;break;
+    case 'recFrom':fRecords.from=el.value;break;
+    case 'recTo':fRecords.to=el.value;break;
+    case 'afBuilding':aFilter.buildingId=+el.value;renderPC();break;
+    case 'afType':aFilter.typeId=+el.value;renderPC();break;
+    case 'reBuilding':reForm.buildingId=+el.value;renderRoomForm();break;
+    case 'reType':reForm.typeId=+el.value;renderRoomForm();break;
+    case 'reStatus':reForm.status=+el.value;renderRoomForm();break;
+    case 'reNo':reForm.roomNo=el.value;break;
+    case 'reRemark':reForm.remark=el.value;break;
+    case 'bfName':bForm.name=el.value;break;
+    case 'bfRemark':bForm.remark=el.value;break;
+    case 'tfName':tForm.name=el.value;break;
+    case 'tfRemark':tForm.remark=el.value;break;
+  }
+});
+document.addEventListener('input',e=>{
+  const el=e.target;
+  if(el.dataset&&el.dataset.input==='assignSearch'){
+    assign.search=el.value;
+    const box=document.getElementById('assignGuests');
+    if(box)box.innerHTML=guestPickRows();
+  }
+});
+
+/* ================= 通用动作 ================= */
+acts.switchMode=d=>setMode(d.mode);
+acts.togglePanel=()=>document.getElementById('panel').classList.toggle('open');
+function fitDevice(){                            // 窄屏下等比缩放 PC 外壳，避免横向溢出
+  const el=document.getElementById('pcShell');if(!el)return;
+  if(window.innerWidth>900){el.style.transform='';el.style.marginBottom='';return}
+  const s=Math.min(1,(window.innerWidth-12)/1180);
+  el.style.transform='scale('+s+')';
+  el.style.marginBottom=(-(760*(1-s)))+'px';
+}
+acts.jump=d=>{setMode(d.mode);if(d.mode==='pc'){pcPage=d.page;renderPC()}else{tabTo(d.screen)}};
+acts.pcGo=d=>{pcPage=d.id;renderPC()};
+acts.toggleGroup=d=>{pcOpen[d.g]=!pcOpen[d.g];renderPC()};
+acts.pcExit=()=>toast('演示原型：退出登录仅作示意');
+acts.pcSearch=()=>renderPC();
+acts.pcReset=d=>{
+  switch(d.t){
+    case 'buildings':fBuildings.name='';break;
+    case 'roomTypes':fRoomTypes.name='';break;
+    case 'rooms':fRooms={buildingId:0,typeId:0,status:-1};break;
+    case 'guests':fGuests={name:'',gender:-1,type:-1,stay:-1};break;
+    case 'stay':fStay={buildingId:0};break;
+    case 'records':fRecords={guest:'',buildingId:0,roomId:0,from:'',to:''};break;
+  }
+  renderPC();
+};
+acts.tab=d=>tabTo(d.id);
+acts.recSearch=()=>refresh();
+acts.recReset=()=>{fRecords={guest:'',buildingId:0,roomId:0,from:'',to:''};refresh()};
+acts.navBack=back;
+acts.closeSheet=closeSheet;
+acts.confirmOk=()=>{const cb=pendingConfirm;pendingConfirm=null;closeSheet();cb&&cb()};
+acts.mFilter=d=>{mRoomFilter=+d.v;rerender()};
+acts.mStatusFilter=d=>{mStatusFilter=d.v;rerender()};
+acts.mGuestType=d=>{mGuestType=d.v;rerender()};
+acts.mGuestGender=d=>{mGuestGender=d.v;rerender()};
+acts.mGuestStay=d=>{mGuestStay=d.v;rerender()};
+acts.statJump=d=>{mStatusFilter=d.st;tabTo('rooms')};    // 首页房间状态统计 → 房间列表并按该状态筛选
+acts.go=d=>go(d.id);
+acts.openRoom=d=>{curRoom=+d.id;go('room-detail')};
+acts.reset=()=>{
+  db=seed();
+  assign={roomId:null,guestIds:[],search:''};
+  reForm=null;bForm=null;tForm=null;addSel=null;curRoom=null;
+  ng={name:'',gender:1,type:0,phone:'',editId:null};
+  fBuildings={name:''};fRoomTypes={name:''};fRooms={buildingId:0,typeId:0,status:-1};
+  fGuests={name:'',gender:-1,type:-1,stay:-1};fStay={buildingId:0};aFilter={buildingId:0,typeId:0};
+  fRecords={guest:'',buildingId:0,roomId:0,from:'',to:''};
+  mRoomFilter=0;mStatusFilter='all';mGuestGender='all';mGuestType='all';mGuestStay='all';pcPage='b-buildings';stack.length=0;curId='home';
+  closeSheet();toast('演示数据已重置');refresh();
+};
+
+/* ================= 分配住客（核心：分配即入住） ================= */
+acts.goAssign=()=>{assign={roomId:null,guestIds:[],search:''};go('assign')};
+acts.roomAssign=d=>{
+  const r=assignableRoom(d.id);
+  if(!r)return;
+  assign={roomId:r.id,guestIds:[],search:''};go('assign');
+};
+acts.pcAssignRoom=d=>{
+  const r=assignableRoom(d.id);
+  if(!r)return;
+  assign={roomId:r.id,guestIds:[],search:''};pcPage='b-assign';renderPC();
+};
+acts.pcAddGuestToRoom=d=>{                    // PC 端：已入住房间追加住客
+  const r=room(+d.id);
+  if(!r)return;
+  if(!activeCheckin(r.id))return toast(`${roomLabel(r)} 当前无在住记录，无法追加住客`);
+  curRoom=r.id;acts.openAddToRoom();
+};
+acts.pickAssignRoom=d=>{
+  const r=assignableRoom(d.id);
+  if(!r)return;
+  assign.roomId=r.id;refresh();
+};
+acts.tgAssignGuest=d=>{
+  const id=+d.id,i=assign.guestIds.indexOf(id);
+  if(i>=0)assign.guestIds.splice(i,1);else assign.guestIds.push(id);
+  refresh();
+};
+acts.assignBed=()=>{
+  const r=room(assign.roomId);
+  if(!r)return toast('请先选择房间');
+  r.extraBeds=(r.extraBeds||0)+1;
+  toast(`已为 ${roomLabel(r)} 加床 +1，当前 ${roomBeds(r)} 床`);
+  refresh();
+};
+acts.confirmAssign=()=>{
+  const r=room(assign.roomId);
+  if(!r)return toast('请先选择房间');
+  if(r.status!==0){                            // 二次校验：防止绕开 UI 置灰提交
+    assign={roomId:null,guestIds:[],search:''};
+    refresh();
+    return toast(r.status===2?`${roomLabel(r)} 维修中，不可分配`
+      :`${roomLabel(r)} 已有人入住，不可重复分配；如需加人请使用「追加住客」`);
+  }
+  if(!assign.guestIds.length)return toast('请选择住客');
+  if(assign.guestIds.length>roomBeds(r))return toast(`超出可用床位（${roomBeds(r)} 床），请先加床`);
+  const moving=assign.guestIds.filter(id=>!!stayOf(id));   // 已在其他房间入住的住客 → 需换房确认
+  if(!moving.length)return doAssign(false);
+  const names=moving.map(id=>guest(id).name).join('、');
+  const froms=[...new Set(moving.map(id=>roomLabel(room(stayOf(id).roomId))))].join('、');
+  confirmModal('更换房间',
+    `<div style="font-size:14px;font-weight:600;margin-bottom:8px">${moving.length===1?'该住客已有入住的房间，是否确定将该住客更换房间？':'所选住客中有 '+moving.length+' 人已有入住的房间，是否确定将这些住客更换房间？'}</div>
+     <div class="sub">住客：${names} ｜ 原房间：${froms}</div>
+     <div class="sub" style="margin-top:6px">确认后：该住客原入住记录将被结束并记入历史；原房间若仍有其他住客则不退房，仅该住客换房。</div>`,
+    '确认',()=>doAssign(true));
+};
+function detachGuest(id,toLabel){            // 换房：从原入住记录中移除该住客，返回原房间名
+  const c=stayOf(id);
+  if(!c)return '';
+  const fromRoom=room(c.roomId);
+  const fr=roomLabel(fromRoom);
+  c.guestIds=c.guestIds.filter(x=>x!==id);            // 仅移除该住客，保留同房其他人
+  const tail=`${guest(id).name} 换房至 ${toLabel}`;
+  c.remark=c.remark?`${c.remark}；${tail}`:tail;       // 原记录留下换房痕迹
+  if(!c.guestIds.length){                             // 原房间已无其他住客 → 才执行退房
+    c.isCheckout=true;c.outDate=TODAY;
+    fromRoom.status=0;fromRoom.needClean=1;
+  }
+  return fr;
+}
+function doAssign(isMove){
+  const r=room(assign.roomId);
+  const label=roomLabel(r);
+  const names=assign.guestIds.map(id=>guest(id).name).join('、');
+  let remark='';
+  if(isMove){                                  // 按住客换房：结束其原入住记录
+    const froms=[];
+    assign.guestIds.forEach(id=>{
+      const fr=detachGuest(id,label);
+      if(fr&&!froms.includes(fr))froms.push(fr);
+    });
+    remark=`换房转入（原 ${froms.join('、')}）`;
+  }
+  db.checkins.unshift({
+    id:nid(db.checkins),roomId:r.id,guestIds:[...assign.guestIds],
+    inDate:TODAY,expectOut:datePlus(TODAY,7),outDate:null,isCheckout:false,operator:ADMIN_NAME,remark
+  });
+  r.status=1;r.needClean=0;
+  assign={roomId:null,guestIds:[],search:''};
+  toast(isMove?`换房成功：${names} 转入 ${label}`:`分配成功：${label}（${names}）`);
+  if(mode==='pc')renderPC(); else tabTo('rooms');
+}
+
+/* ================= 入住 / 退房 / 清扫 ================= */
+acts.checkoutAsk=d=>{
+  const c=d.cid?db.checkins.find(x=>x.id===+d.cid):activeCheckin(+d.id);
+  if(!c)return toast('未找到在住记录');
+  const r=room(c.roomId);
+  const names=guestsOfCheckin(c).map(g=>g.name).join('、');
+  confirmModal('办理退房',
+    `确认为 <b>${roomLabel(r)}</b> 的住客（${names}）办理退房？<br>退房后房间状态置为「空闲」并标记「待清扫」。`,
+    '确定退房',()=>{
+      c.isCheckout=true;c.outDate=TODAY;
+      r.status=0;r.needClean=1;
+      toast('已办理退房，房间标记为待清扫');
+      refresh();
+    });
+};
+acts.markClean=d=>{
+  const r=room(+d.id);
+  if(!r)return;
+  r.needClean=0;
+  toast(`已标记 ${roomLabel(r)} 清扫完成`);
+  refresh();
+};
+
+/* 追加住客（房间详情） */
+acts.openAddToRoom=()=>{addSel={guests:[]};renderAddToRoom()};
+acts.bedThenAdd=()=>{
+  const r=room(curRoom);
+  r.extraBeds=(r.extraBeds||0)+1;
+  toast(`已加床 +1，当前 ${roomBeds(r)} 床`);
+  addSel={guests:[]};renderAddToRoom();
+};
+function renderAddToRoom(){
+  const r=room(curRoom);
+  if(!r)return;
+  const c=activeCheckin(r.id),beds=roomBeds(r);
+  if(!c){closeSheet();return toast(`${roomLabel(r)} 当前无在住记录，无法追加住客`)}
+  const already=c.guestIds;
+  const total=already.length+addSel.guests.length;
+  const remain=beds-total;
+  openModal(`追加住客 · ${roomLabel(r)}`,
+    `<div class="bedprog ${remain<0?'over':''}">已选 <b>${total}</b> / ${beds} 床${remain<0?' <span style="color:var(--red)">超出可用床位</span>':''}</div>
+     ${db.guests.map(g=>{
+       const inRoom=already.includes(g.id),on=addSel.guests.includes(g.id);
+       return `<div class="ckrow ${on?'on':''} ${inRoom?'dis':''}" ${inRoom?'':`data-act="tgAddGuest" data-id="${g.id}"`}>
+         <span class="ckbox">${(on||inRoom)?'✓':''}</span>${avt(g)}
+         <div class="grow"><b>${g.name}</b> ${attrTags(g)} ${inRoom?'<span class="tag tg-gray">已在本房</span>':''}
+         <div class="sub">${g.phone||'未留电话'}</div></div>
+       </div>`;}).join('')}
+     ${mixWarn(already.concat(addSel.guests))}
+     ${remain<0?`<button class="btn btn-gold btn-block" style="margin-top:12px" data-act="addToRoomBed">＋ 加床（+1 床，当前 ${beds} 床）</button>`:''}
+     <div class="btn-row" style="margin-top:14px">
+       <button class="btn btn-ghost" data-act="openAddGuest" data-ctx="addroom">＋ 新建住客</button>
+       <button class="btn btn-primary" data-act="confirmAddToRoom" ${remain<0?'disabled':''}>确定添加</button>
+     </div>`);
+}
+acts.tgAddGuest=d=>{
+  const id=+d.id,i=addSel.guests.indexOf(id);
+  if(i>=0)addSel.guests.splice(i,1);else addSel.guests.push(id);
+  renderAddToRoom();
+};
+acts.addToRoomBed=()=>{const r=room(curRoom);r.extraBeds=(r.extraBeds||0)+1;toast(`已加床 +1，当前 ${roomBeds(r)} 床`);renderAddToRoom()};
+acts.confirmAddToRoom=()=>{
+  const r=room(curRoom),c=activeCheckin(r.id);
+  if(!c)return closeSheet();
+  if(!addSel.guests.length)return toast('请先勾选要追加的住客');
+  if(c.guestIds.length+addSel.guests.length>roomBeds(r))return toast(`超出可用床位（${roomBeds(r)} 床），请先加床`);
+  const moving=addSel.guests.filter(id=>{const s=stayOf(id);return !!s&&s!==c});   // 已在其他房间在住 → 需换房确认
+  if(!moving.length)return doAddToRoom();
+  const names=moving.map(id=>guest(id).name).join('、');
+  const froms=[...new Set(moving.map(id=>roomLabel(room(stayOf(id).roomId))))].join('、');
+  confirmModal('更换房间',
+    `<div style="font-size:14px;font-weight:600;margin-bottom:8px">${moving.length===1?'该住客已有入住的房间，是否确定将该住客更换房间？':'所选住客中有 '+moving.length+' 人已有入住的房间，是否确定将这些住客更换房间？'}</div>
+     <div class="sub">住客：${names} ｜ 原房间：${froms} → 转入 ${roomLabel(r)}</div>
+     <div class="sub" style="margin-top:6px">确认后：该住客原入住记录将被结束并记入历史；原房间若仍有其他住客则不退房，仅该住客换房。</div>`,
+    '确认',doAddToRoom);
+};
+function doAddToRoom(){
+  const r=room(curRoom),c=activeCheckin(r.id);
+  if(!c)return closeSheet();
+  const label=roomLabel(r);
+  const n=addSel.guests.length;
+  const moved=addSel.guests.filter(id=>{const s=stayOf(id);return !!s&&s!==c});
+  moved.forEach(id=>{
+    detachGuest(id,label);                                    // 结束该住客的原入住记录
+    const tail=`${guest(id).name} 换房转入 ${label}`;
+    c.remark=c.remark?`${c.remark}；${tail}`:tail;             // 本记录留下换房痕迹
+  });
+  c.guestIds.push(...addSel.guests);
+  addSel=null;closeSheet();
+  toast(moved.length?`换房成功：${moved.map(id=>guest(id).name).join('、')} 转入 ${label}`:`已追加 ${n} 位住客`);
+  refresh();
+}
+
+/* ================= 房间 新增/编辑/删除 ================= */
+function roomNeed(r){return occupants(r)}                      // 编辑房间时不可低于的在住人数
+function roomEditNeed(){return reForm.editId===null?0:roomNeed(room(reForm.editId))}
+acts.openAddRoom=()=>{
+  if(!db.buildings.length)return toast('请先在「楼栋管理」中新增楼栋');
+  if(!db.roomTypes.length)return toast('请先在「房型管理」中新增房型');
+  reForm={editId:null,buildingId:db.buildings[0].id,roomNo:'',typeId:db.roomTypes[0].id,status:0,extraBeds:0,remark:''};
+  renderRoomForm();
+};
+acts.openRoomEdit=d=>{
+  const id=(d&&d.id!=null)?+d.id:curRoom;
+  if(id==null)return;
+  const r=room(id);if(!r)return;
+  reForm={editId:r.id,buildingId:r.buildingId,roomNo:r.roomNo,typeId:r.typeId,
+    status:r.status===1?0:r.status,extraBeds:r.extraBeds||0,remark:r.remark||''};
+  renderRoomForm();
+};
+acts.reBed=d=>{reForm.extraBeds=Math.max(0,reForm.extraBeds+(+d.v));renderRoomForm()};
+function renderRoomForm(){
+  const adding=reForm.editId===null;
+  const c=adding?null:activeCheckin(reForm.editId);
+  const base=rtype(reForm.typeId).bedCount;
+  const total=base+reForm.extraBeds;
+  const need=roomEditNeed();
+  const bad=total<need;
+  openModal(`${adding?'新增房间':'编辑房间'}${adding?'':` · ${building(reForm.buildingId).name} ${reForm.roomNo||''}`}`,
+    `<div class="fi"><label>所属楼栋</label>
+      <select data-change="reBuilding">${db.buildings.map(b=>`<option value="${b.id}" ${b.id===reForm.buildingId?'selected':''}>${b.name}</option>`).join('')}</select></div>
+    <div class="fi"><label>房间号</label><input data-change="reNo" value="${reForm.roomNo}" placeholder="如 101"></div>
+    <div class="fi"><label>房型</label>
+      <select data-change="reType">${db.roomTypes.map(t=>`<option value="${t.id}" ${t.id===reForm.typeId?'selected':''}>${t.name}（基准 ${t.bedCount} 床）</option>`).join('')}</select></div>
+    <div class="fi"><label>加床数量</label>
+      <div style="display:flex;align-items:center;gap:11px">
+        <button class="btn btn-ghost btn-sm" data-act="reBed" data-v="-1" ${reForm.extraBeds<=0?'disabled':''}>− 减床</button>
+        <div class="grow" style="text-align:center;font-size:23px;font-weight:800;color:${bad?'var(--red)':'var(--ink)'}">${total}<span style="font-size:12px;color:var(--sub);font-weight:400"> 床</span></div>
+        <button class="btn btn-gold btn-sm" data-act="reBed" data-v="1">＋ 加床</button>
+      </div>
+      <div class="sub" style="margin-top:7px">房型基准 ${base} 床 ＋ 加床 ${reForm.extraBeds} ＝ 合计 ${total} 床</div>
+      ${bad?`<div class="sub" style="color:var(--red);margin-top:5px">⚠ 合计床位少于当前在住 ${need} 人，请先办理退房或增加床位</div>`:''}
+    </div>
+    <div class="fi"><label>房间状态</label>
+      ${c?'<input value="已入住（状态由办理退房变更）" disabled>'
+        :`<select data-change="reStatus">
+            <option value="0" ${reForm.status===0?'selected':''}>空闲</option>
+            <option value="2" ${reForm.status===2?'selected':''}>维修中</option>
+          </select>`}</div>
+    <div class="fi" style="margin-bottom:6px"><label>房间备注</label><input data-change="reRemark" value="${reForm.remark||''}" placeholder="选填"></div>
+    <button class="btn btn-primary btn-block" data-act="saveRoom" ${bad?'disabled':''}>${adding?'确认新增':'保存修改'}</button>`);
+}
+acts.saveRoom=()=>{
+  const no=(reForm.roomNo||'').trim();
+  if(!no)return toast('请填写房间号');
+  const total=rtype(reForm.typeId).bedCount+reForm.extraBeds;
+  const need=roomEditNeed();
+  if(total<need)return toast(`合计床位不能少于 ${need} 人（当前在住）`);
+  if(db.rooms.some(x=>x.id!==reForm.editId&&!x.delFlag&&x.buildingId===reForm.buildingId&&x.roomNo===no))
+    return toast(`${building(reForm.buildingId).name} 已存在房间 ${no}`);
+  const bName=building(reForm.buildingId).name;
+  if(reForm.editId===null){
+    db.rooms.push({id:nid(db.rooms),buildingId:reForm.buildingId,roomNo:no,typeId:reForm.typeId,
+      status:reForm.status,needClean:0,extraBeds:reForm.extraBeds,remark:reForm.remark||'',delFlag:0});
+    reForm=null;closeSheet();
+    toast(`已新增房间：${bName} ${no}`);
+    refresh();return;
+  }
+  const r=room(reForm.editId),c=activeCheckin(r.id);
+  Object.assign(r,{buildingId:reForm.buildingId,roomNo:no,typeId:reForm.typeId,
+    extraBeds:reForm.extraBeds,remark:reForm.remark||''});
+  if(!c)r.status=reForm.status;
+  reForm=null;closeSheet();
+  toast('房间信息已更新');
+  refresh();
+};
+acts.pcAddBed=d=>{
+  const r=room(+d.id);if(!r)return;
+  r.extraBeds=(r.extraBeds||0)+1;
+  toast(`已为 ${roomLabel(r)} 加床 +1，当前 ${roomBeds(r)} 床`);
+  renderPC();
+};
+acts.delRoomAsk=d=>{
+  const id=(d&&d.id!=null)?+d.id:curRoom;
+  const r=room(id);if(!r)return;
+  if(activeCheckin(r.id))
+    return toast('该房间当前有住客，请先办理退房后再删除');
+  const his=db.checkins.filter(c=>c.roomId===r.id).length;
+  confirmModal('删除房间',
+    `确定删除 <b>${roomLabel(r)}</b>（${tNameOf(r)}）吗？<br>删除后该房间不再出现在房间列表与分配页${his?`；其 ${his} 条历史入住记录会完整保留，仍可在「入住记录查询」中查看`:'（该房间暂无入住记录）'}。`,'确定删除',()=>{
+      const label=roomLabel(r);
+      r.delFlag=1;                                  // 逻辑删除：仅标记，保留历史关联
+      toast(`已删除房间 ${label}${his?'（历史入住记录已保留）':''}`);
+      if(mode==='mobile'){curRoom=null;back()}else renderPC();
+    },true);
+};
+
+/* ================= 楼栋管理 ================= */
+acts.openAddBuilding=()=>{bForm={id:null,name:'',remark:''};renderBuildingForm()};
+acts.openEditBuilding=d=>{
+  const b=building(+d.id);if(!b)return;
+  bForm={id:b.id,name:b.name,remark:b.remark||''};
+  renderBuildingForm();
+};
+function renderBuildingForm(){
+  const editing=bForm.id!==null;
+  openModal(editing?'编辑楼栋':'新增楼栋',
+    `<div class="fi"><label>楼栋名称</label><input data-change="bfName" value="${bForm.name}" placeholder="如 慈云楼"></div>
+     <div class="fi" style="margin-bottom:6px"><label>备注</label><input data-change="bfRemark" value="${bForm.remark||''}" placeholder="选填"></div>
+     <button class="btn btn-primary btn-block" data-act="saveBuilding">${editing?'保存修改':'确认新增'}</button>`,'sm');
+}
+acts.saveBuilding=()=>{
+  const name=(bForm.name||'').trim();
+  if(!name)return toast('请填写楼栋名称');
+  if(db.buildings.some(b=>b.id!==bForm.id&&b.name===name))return toast(`已存在楼栋「${name}」`);
+  if(bForm.id===null){
+    db.buildings.push({id:nid(db.buildings),name,remark:bForm.remark||''});
+    toast(`已新增楼栋 ${name}`);
+  }else{
+    Object.assign(building(bForm.id),{name,remark:bForm.remark||''});
+    toast(`已保存楼栋 ${name}`);
+  }
+  bForm=null;closeSheet();refresh();
+};
+acts.delBuildingAsk=d=>{
+  const b=building(+d.id);if(!b)return;
+  const n=buildingRooms(b.id).length;
+  if(n)return toast(`「${b.name}」下还有 ${n} 个房间，请先处理这些房间`);
+  confirmModal('删除楼栋',`确定删除楼栋 <b>${b.name}</b> 吗？删除后不可恢复。`,'确定删除',()=>{
+    db.buildings.splice(db.buildings.findIndex(x=>x.id===b.id),1);
+    if(fRooms.buildingId===b.id)fRooms.buildingId=0;
+    if(mRoomFilter===b.id)mRoomFilter=0;
+    toast(`已删除楼栋 ${b.name}`);
+    refresh();
+  },true);
+};
+
+/* ================= 房型管理 ================= */
+acts.openAddRoomType=()=>{tForm={id:null,name:'',bedCount:2,remark:''};renderRoomTypeForm()};
+acts.openEditRoomType=d=>{
+  const t=rtype(+d.id);if(!t)return;
+  tForm={id:t.id,name:t.name,bedCount:t.bedCount,remark:t.remark||''};
+  renderRoomTypeForm();
+};
+function renderRoomTypeForm(){
+  const editing=tForm.id!==null;
+  const used=editing?typeRooms(tForm.id).length:0;
+  openModal(editing?'编辑房型':'新增房型',
+    `<div class="fi"><label>房型名称</label><input data-change="tfName" value="${tForm.name}" placeholder="如 双人间"></div>
+     <div class="fi"><label>基准床位数量</label>
+       <div style="display:flex;align-items:center;gap:11px">
+         <button class="btn btn-ghost btn-sm" data-act="tfBed" data-v="-1" ${tForm.bedCount<=1?'disabled':''}>− 减床</button>
+         <div class="grow" style="text-align:center;font-size:23px;font-weight:800">${tForm.bedCount}<span style="font-size:12px;color:var(--sub);font-weight:400"> 床</span></div>
+         <button class="btn btn-gold btn-sm" data-act="tfBed" data-v="1">＋ 加床</button>
+       </div>
+       ${used?`<div class="sub" style="margin-top:7px">当前有 ${used} 个房间使用该房型，改基准床位会同步影响这些房间的可用床位</div>`:''}
+     </div>
+     <div class="fi" style="margin-bottom:6px"><label>备注</label><input data-change="tfRemark" value="${tForm.remark||''}" placeholder="选填"></div>
+     <button class="btn btn-primary btn-block" data-act="saveRoomType">${editing?'保存修改':'确认新增'}</button>`,'sm');
+}
+acts.tfBed=d=>{tForm.bedCount=Math.max(1,tForm.bedCount+(+d.v));renderRoomTypeForm()};
+acts.saveRoomType=()=>{
+  const name=(tForm.name||'').trim();
+  if(!name)return toast('请填写房型名称');
+  if(db.roomTypes.some(t=>t.id!==tForm.id&&t.name===name))return toast(`已存在房型「${name}」`);
+  if(tForm.id!==null){
+    const bad=typeRooms(tForm.id).filter(r=>tForm.bedCount+(r.extraBeds||0)<roomNeed(r));
+    if(bad.length)return toast(`基准床位过低：房间「${bad[0].roomNo}」需至少 ${roomNeed(bad[0])} 床`);
+    Object.assign(rtype(tForm.id),{name,bedCount:tForm.bedCount,remark:tForm.remark||''});
+    tForm=null;closeSheet();refresh();
+    toast(`已保存房型 ${name}`);
+    return;
+  }
+  db.roomTypes.push({id:nid(db.roomTypes),name,bedCount:tForm.bedCount,remark:tForm.remark||''});
+  tForm=null;closeSheet();refresh();
+  toast(`已新增房型 ${name}`);
+};
+acts.delRoomTypeAsk=d=>{
+  const t=rtype(+d.id);if(!t)return;
+  const n=typeRooms(t.id).length;
+  if(n)return toast(`「${t.name}」已被 ${n} 个房间使用，请先处理这些房间`);
+  confirmModal('删除房型',`确定删除房型 <b>${t.name}</b>（基准 ${t.bedCount} 床）吗？删除后不可恢复。`,'确定删除',()=>{
+    db.roomTypes.splice(db.roomTypes.findIndex(x=>x.id===t.id),1);
+    if(fRooms.typeId===t.id)fRooms.typeId=0;
+    toast(`已删除房型 ${t.name}`);
+    refresh();
+  },true);
+};
+
+/* ================= 住客 新增/编辑/删除 ================= */
+acts.openAddGuest=d=>{ng={name:'',gender:1,type:0,phone:'',editId:null};renderGuestForm(d.ctx||'list')};
+acts.openEditGuest=d=>{
+  const g=guest(+d.id);if(!g)return;
+  ng={name:g.name,gender:g.gender,type:g.type,phone:g.phone||'',editId:g.id};
+  renderGuestForm(d.ctx||'list');
+};
+acts.delGuestAsk=d=>{
+  const g=guest(+d.id);if(!g)return;
+  if(guestReferenced(g.id))return toast('该住客已被入住记录引用，不可删除');
+  confirmModal('删除住客',`确定删除住客 <b>${g.name}</b>（${GD(g.gender)} · ${GT(g.type)[0]}）吗？删除后不可恢复。`,'确定删除',()=>{
+    db.guests.splice(db.guests.findIndex(x=>x.id===g.id),1);
+    const i=assign.guestIds.indexOf(g.id);if(i>=0)assign.guestIds.splice(i,1);
+    toast(`已删除住客 ${g.name}`);
+    refresh();
+  },true);
+};
+function renderGuestForm(ctx){
+  const editing=ng.editId!==null;
+  const segBtn=(field,val,label,act)=>{
+    const on=ng[field]===val;
+    return `<button style="flex:1;height:34px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:${on?'var(--blue)':'transparent'};color:${on?'#fff':'var(--sub)'}" data-act="${act}" data-v="${val}" data-ctx="${ctx}">${label}</button>`;
+  };
+  openModal(editing?'编辑住客':'新增住客',
+    `<div class="fi"><label>姓名</label><input id="ngName" value="${ng.name}" placeholder="请输入住客姓名"></div>
+     <div class="fi"><label>性别</label>
+       <div style="display:flex;background:#F1F3F8;border-radius:11px;padding:4px;gap:4px">
+         ${segBtn('gender',1,'男','ngGender')}${segBtn('gender',0,'女','ngGender')}
+       </div></div>
+     <div class="fi"><label>身份</label>
+       <div style="display:flex;background:#F1F3F8;border-radius:11px;padding:4px;gap:4px">
+         ${segBtn('type',0,'在家人','ngType')}${segBtn('type',1,'出家人','ngType')}
+       </div></div>
+     <div class="fi" style="margin-bottom:6px"><label>手机号</label><input id="ngPhone" value="${ng.phone}" placeholder="选填"></div>
+     <button class="btn btn-primary btn-block" data-act="saveGuest" data-ctx="${ctx}">${editing?'保存修改':'保存'}</button>`,'sm');
+}
+function syncGuestForm(){
+  const n=document.getElementById('ngName'),p=document.getElementById('ngPhone');
+  if(n)ng.name=n.value;if(p)ng.phone=p.value;
+}
+acts.ngType=d=>{syncGuestForm();ng.type=+d.v;renderGuestForm(d.ctx)};
+acts.ngGender=d=>{syncGuestForm();ng.gender=+d.v;renderGuestForm(d.ctx)};
+acts.saveGuest=d=>{
+  const nameEl=document.getElementById('ngName');
+  const phoneEl=document.getElementById('ngPhone');
+  const name=(nameEl?nameEl.value:'').trim();
+  const phone=(phoneEl?phoneEl.value:'').trim();
+  if(!name)return toast('请填写姓名');
+  const ctx=d.ctx;
+  if(ng.editId!==null){
+    const g=guest(ng.editId);
+    Object.assign(g,{name,phone,type:ng.type,gender:ng.gender});
+    ng={name:'',gender:1,type:0,phone:'',editId:null};
+    closeSheet();refresh();
+    toast(`已保存 ${name} 的资料`);
+    return;
+  }
+  const id=nid(db.guests);
+  db.guests.push({id,name,gender:ng.gender,type:ng.type,phone});
+  ng={name:'',gender:1,type:0,phone:'',editId:null};
+  if(ctx==='assign'){assign.guestIds.push(id);closeSheet();refresh();toast('住客已创建并选中');}
+  else if(ctx==='addroom'){addSel.guests.push(id);renderAddToRoom();toast('住客已创建');}
+  else{closeSheet();refresh();toast('住客已创建');}
+};
+
+/* ================= 启动 ================= */
+setMode('mobile');
+fitDevice();
+window.addEventListener('resize',fitDevice);
+</script>
+</body>
+</html>
