@@ -267,6 +267,11 @@ body{
 .stickbar{position:sticky;bottom:-2px;background:linear-gradient(180deg,rgba(244,246,250,.4),var(--bg) 32%);padding:12px 0 6px;display:flex;gap:10px;align-items:center;margin-top:4px}
 .stickbar .btn{flex:none}
 .stickbar .btn.main{flex:1}
+/* 住客页：新增按钮常驻内容区底部（滚动中/滚到底/内容不足一屏 三种情形都贴底且不遮挡列表）
+   注：下面三处 30px = .screen 的 padding-bottom，用于补偿它带来的空隙 */
+.mguest{display:flex;flex-direction:column;min-height:calc(100% + 30px);margin-bottom:-30px}
+.mguest-add{position:sticky;bottom:-30px;margin-top:auto;padding:10px 0 6px;z-index:5;
+  background:linear-gradient(180deg,rgba(244,246,250,0),var(--bg) 20%)}
 </style>
 </head>
 <body>
@@ -1146,6 +1151,7 @@ RENDER['guests']=()=>{
   const sdefs=Object.keys(MSTAY).map(k=>({v:k,t:MSTAY[k].t}));
   const list=db.guests.filter(g=>MGENDER[mGuestGender].ok(g)&&MTYPE[mGuestType].ok(g)&&MSTAY[mGuestStay].ok(g));
   return `
+  <div class="mguest">
   <div class="tipbar">住客分「在家人 / 出家人」两种身份，性别与身份标签贯穿分配、入住与历史记录。已被入住记录引用的住客不可删除。</div>`
   + chipBar(gdefs,mGuestGender,'mGuestGender')
   + chipBar(tdefs,mGuestType,'mGuestType')
@@ -1159,7 +1165,8 @@ RENDER['guests']=()=>{
         <button class="btn btn-sm btn-danger" style="flex:none" data-act="delGuestAsk" data-id="${g.id}">删除</button>
       </div>`).join(''):`<div class="empty">「${MGENDER[mGuestGender].t} · ${MTYPE[mGuestType].t} · ${MSTAY[mGuestStay].t}」下暂无住客</div>`}
   </div>
-  <button class="btn btn-primary btn-block" data-act="openAddGuest" data-ctx="list">＋ 新增住客</button>`;
+  <div class="mguest-add"><button class="btn btn-primary btn-block" data-act="openAddGuest" data-ctx="list">＋ 新增住客</button></div>
+  </div>`;
 };
 
 RENDER['manage']=()=>{
